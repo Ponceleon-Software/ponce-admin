@@ -1,7 +1,3 @@
-const cardsEndpoints = {
-  ponceTopBar: "topbar",
-};
-
 /**
  * Toma el arreglo de configuraciones de la base de datos y devuelve
  * las tarjetas correspondientes
@@ -13,9 +9,7 @@ const createAllCards = (settings) => {
     const name = value.name;
     const descripcion = value.description;
     const isActive = value.is_active === "1";
-    const dbaction = cardsEndpoints[value.name]
-      ? async () => await wpRestApi(cardsEndpoints[value.name])
-      : () => {};
+    const dbaction = async () => await wpRestApi(name);
 
     const tarjeta = new TarjetaConfiguracion(name, descripcion, dbaction);
     tarjeta.setSwitch(isActive);
