@@ -8,13 +8,14 @@ add_action( 'rest_api_init', function () {
 } );
 function setPonceLogo(WP_REST_request $request){
 
-  //Definitions
+  #region Definitions
   $uploadsFolder = str_replace("\\endpoints", "/assets/img/", __DIR__ );
   global $wpdb;
   $table_name = $wpdb->prefix . 'ponce';
   $name = 'ponceLogo';
+  #endregion
 
-  //Borrar imagen previa si existe
+  #region Borrar imagen previa si existe
   $prevOptions = $wpdb->get_var( $wpdb->prepare(
     "SELECT options FROM $table_name WHERE name = '$name'"
 	));
@@ -28,37 +29,30 @@ function setPonceLogo(WP_REST_request $request){
   if($prevSrc!=""){
     unlink($prevSrc);
   }
+  #endregion
 
   $file = $request->get_file_params()["image"];
-  if(!(isset($file) && is_uploaded_file($file['tmp_name']))){
-    $result=$wpdb->update(
-      $table_name, 
-      array('options' => 'src:,inAdmin:false,inLogin:false'), 
-      array( 'name' => $name )
-    );
-    if($result>0){
-      return true;
-    }
-  }else{
-    $inAdmin = isset($request["inAdmin"]);
-    $inLogin = isset($request["inLogin"]);
-    
+  $src = '';
+  $inAdmin = isset($request["inAdmin"]);
+  $inLogin = isset($request["inLogin"]);
+  if(isset($file) && is_uploaded_file($file['tmp_name'])){
     $fileTmpPath = $file['tmp_name'];
     $fileName = $file['name'];
-  
+
     $dest_path = $uploadsFolder . $fileName;
-    if(!move_uploaded_file($fileTmpPath, $dest_path)){
+    if(move_uploaded_file($fileTmpPath, $dest_path)){
+      $src = $dest_path;
+    }else{
       return false;
     }
-
-    $result = $wpdb->update(
-      $table_name,
-      array('options' => "src:$dest_path,inAdmin:$inAdmin,inLogin:$inLogin"),
-      array( 'name' => $name )
-    );
-    if($result>0){
-      return true;
-    }
+  }
+  $result = $wpdb->update(
+    $table_name,
+    array('options' => "src:$src,inAdmin:$inAdmin,inLogin:$inLogin"),
+    array( 'name' => $name )
+  );
+  if($result>0){
+    return true;
   }
   
 	return false;
