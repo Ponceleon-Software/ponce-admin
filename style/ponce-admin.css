@@ -1,0 +1,18 @@
+.ponce-admin__ping-decoration{
+    animation: custom-ping 9s linear infinite;
+}
+
+.ponce-admin__ping-decoration--2{
+    animation-delay: 3s;
+}
+
+.ponce-admin__ping-decoration--3{
+    animation-delay: 6s;
+}
+
+@keyframes custom-ping{
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
