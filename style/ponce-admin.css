@@ -16,3 +16,6 @@
     opacity: 0;
   }
 }
+.fixed-tw {
+  position: fixed;
+}
