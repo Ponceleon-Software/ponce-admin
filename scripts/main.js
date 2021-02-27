@@ -23,7 +23,6 @@ window.addEventListener("load", function () {
         iframe.style.height = "100%";
       } else {
         setTimeout(function () {
-          console.log("a");
           iframe.style.height = "20vh";
           iframe.style.width = "6vw";
           iframe.style.top = "50%";
