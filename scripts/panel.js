@@ -72,5 +72,4 @@ window.addEventListener("DOMContentLoaded", (e) => {
     modPanel.setState({ lateralOpen: !modPanel.state.lateralOpen });
   };
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
-  modPanel.botonCerrar.addEventListener("click", setLateralOpen);
 });
