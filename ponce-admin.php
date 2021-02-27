@@ -19,11 +19,8 @@ Hacer enqueue de styles:
 Hacer enqueue de ejecución de script:
     -Renderizador del frame (✓)
 */
-  
 
-wp_enqueue_style('tailwind-css','https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css');
-
-wp_enqueue_style('main-css','/wp-content/plugins/Ponce-admin/style/frame.css');
+wp_enqueue_style('frame-css','/wp-content/plugins/Ponce-admin/style/frame.css');
 
 wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/scripts/main.js', array(), null, true );    
 ?>

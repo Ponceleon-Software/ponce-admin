@@ -1,14 +1,7 @@
- #iframe{
-	   position:fixed;
-	   top:50%;
-	   right:0%;
-	   z-index:1;
-	   width:6vw;
+#iframe {
+  position: fixed;
+  top: 50%;
+  right: 0%;
+  z-index: 1;
+  width: 6vw;
 }
-.fixed{
-	position:relative;
-}
-a{
-	color:#0073aa ;
-}
-
