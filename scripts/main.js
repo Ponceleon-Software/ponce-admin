@@ -1,6 +1,6 @@
 window.addEventListener("load", function () {
   let frame;
-  htmlbutton = `${`<iframe name="iframe" id="iframe" src="/wordpress/wp-content/plugins/Ponce-admin/Html/preview.html"></iframe>`}`;
+  htmlbutton = `${`<iframe name="iframe" id="iframe" src="/wordpress/wp-content/plugins/Ponce-admin/html/boton-flotante.html"></iframe>`}`;
 
   function createElementFromHTML(htmlString) {
     var div = document.createElement("div");
