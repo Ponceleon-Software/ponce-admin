@@ -34,34 +34,43 @@ const utils = {
 };
 
 window.addEventListener("DOMContentLoaded", (e) => {
-  const stateDash = { lateralOpen: false };
+  const statePanel = { lateralOpen: false };
   const idElements = {
     lateral: "pa-lateral-deslizable",
     botonAbrir: "pa-button-fixed",
-    botonCerrar: "pa-boton-cerrar-lateral",
+    contenedorBoton: "pa-contenedor-boton-fixed",
   };
 
   //Se inicializa un objeto modificador con un estado lateralOpen que
   //indica si la barra lateral está mostrada y se le añaden los
   //elementos que modificara en cada render
-  const modDashboard = utils.createModificador(stateDash, idElements);
+  const modPanel = utils.createModificador(statePanel, idElements);
 
   //Guardo las clases iniciales de los elementos
-  const classesL = modDashboard.lateral.className;
+  const classesL = modPanel.lateral.className;
+  const classesBoton = modPanel.contenedorBoton.className;
+  const imgBoton = modPanel.botonAbrir.innerHTML;
 
   //Creo y ejecuto por primera vez la función render que se encarga
   //de modificar las clases css del elemento según el state
-  modDashboard.render = () => {
-    modDashboard.lateral.className =
-      classesL + (modDashboard.state.lateralOpen ? " right-0" : " -right-3/4");
+  modPanel.render = () => {
+    modPanel.lateral.className =
+      classesL + (modPanel.state.lateralOpen ? " right-0" : " -right-3/4");
+
+    modPanel.contenedorBoton.className =
+      classesBoton +
+      (modPanel.state.lateralOpen
+        ? " right-3/4 top-12 -mt-6 h-8 w-8"
+        : " right-0 top-1/2 -mt-6 h-12 w-12");
+    modPanel.botonAbrir.innerHTML = modPanel.state.lateralOpen ? "X" : imgBoton;
   };
-  modDashboard.render();
+  modPanel.render();
 
   //Añado un eventlistener al botón que cambie el estado al dar click
   //a cualquiera de los dos botones
   const setLateralOpen = (e) => {
-    modDashboard.setState({ lateralOpen: !modDashboard.state.lateralOpen });
+    modPanel.setState({ lateralOpen: !modPanel.state.lateralOpen });
   };
-  modDashboard.botonAbrir.addEventListener("click", setLateralOpen);
-  modDashboard.botonCerrar.addEventListener("click", setLateralOpen);
+  modPanel.botonAbrir.addEventListener("click", setLateralOpen);
+  modPanel.botonCerrar.addEventListener("click", setLateralOpen);
 });
