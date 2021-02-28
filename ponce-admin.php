@@ -7,20 +7,22 @@
  * Author: Ponceleón Software
  * Author URI: http://www.ponceleon.site
  */
+//Endpoint prueba//
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'ponceadmin/v2', 'prueba', array(
+    'methods' => 'GET',
+    'callback' => 'prueba',
+ ) );
+} );
 
+function prueba(){
+return 'yikes';
+}
+//Endpoint prueba//
 
-/*Pendientes: 
-Hacer enqueue de styles:
-  TailwindCSS (X):
-  	Si se hace un enqueue de styles (los estilos se encadenan al head del wp), se mezclan los estilos encadenados con los propios de wp
-  Frame.css(✓):
-  	Un estilo propio del frame renderizado
-
-Hacer enqueue de ejecución de script:
-    -Renderizador del frame (✓)
-*/
 
 wp_enqueue_style('frame-css','/wp-content/plugins/Ponce-admin/style/frame.css');
-
 wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/scripts/main.js', array(), null, true );    
+
+
 ?>
