@@ -19,13 +19,12 @@ window.addEventListener("load", function () {
     p_button.addEventListener("click", function () {
       if (iframe.style.width != "100vw") {
         iframe.style.width = "100vw";
-        iframe.style.top = "4%";
-        iframe.style.height = "100%";
+        iframe.style.top = "32px";
+        iframe.style.marginTop = "0";
+        iframe.style.height = "calc(100% - 32px)";
       } else {
         setTimeout(function () {
-          iframe.style.height = "20vh";
-          iframe.style.width = "6vw";
-          iframe.style.top = "50%";
+          iframe.style = null;
         }, 350);
       }
     });

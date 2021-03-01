@@ -1,7 +1,9 @@
 #iframe {
   position: fixed;
-  top: 50%;
+  top: calc(50% + 16px);
+  margin-top: -4.5rem;
+  height: 9rem;
   right: 0%;
   z-index: 1;
-  width: 6vw;
+  width: 5.5rem;
 }
