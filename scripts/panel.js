@@ -1,39 +1,110 @@
-/**
- * Objeto que se encarga de modificar un componente de acuerdo al
- * state que tenga. Actúa como componente reactivo sin tener que
- * escribir el html directamente en el javascript
- * @param {Object} state El estado inicial del componente
- */
-function Modificador(state = {}) {
-  this.state = state;
+const createToogle = (checked) =>
+  utils.createElement("input", {
+    type: "checkbox",
+    className: "toggle toggle-primary",
+    checked: checked,
+  });
+const labelToogle = (nombre, checkbox) =>
+  utils.createElement(
+    "label",
+    { className: "label justify-around cursor-pointer" },
+    [
+      utils.createElement("span", {
+        className: "label-text",
+        innerText: nombre,
+      }),
+      utils.createElement("div", {}, [
+        checkbox,
+        utils.createElement("span", { className: "toggle-mark" }),
+      ]),
+    ]
+  );
+const labeledInputFile = (input, attributes) => {
+  input.className += " hidden";
+  return utils.createElement("div", { className: "flex justify-center" }, [
+    utils.createElement(
+      "label",
+      {
+        ...attributes,
+        htmlFor: input.id,
+        className: "btn btn-circle btn-primary",
+        innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="30px" height="30px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
+      },
+      [input]
+    ),
+  ]);
+};
 
-  this.render = (props = {}) => {};
-}
-Modificador.prototype.setState = function (newState) {
-  for (let key in newState) {
-    if (this.state.hasOwnProperty(key)) {
-      this.state[key] = newState[key];
+const tarjetaLogo = () => {
+  const tarjetaLogo = new TarjetaConfiguracion(
+    "Logo",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
+    {
+      isLogo: false,
+      src: "",
+      inLogin: false,
+      inAdmin: false,
     }
-  }
-  this.render();
+  );
+  tarjetaLogo.addKeyWords(["logo", "imagen", "image"]);
+  tarjetaLogo.inputs = {
+    src: utils.createElement("input", {
+      type: "file",
+      accept: "image/jpeg,image/png",
+      id: "pa-logo-input",
+    }),
+    inLogin: createToogle(tarjetaLogo.state.inLogin),
+    inAdmin: createToogle(tarjetaLogo.state.inAdmin),
+  };
+  tarjetaLogo.inputs.inLogin.name = "inLogin";
+  tarjetaLogo.inputs.inAdmin.name = "inAdmin";
+  const src = labeledInputFile(tarjetaLogo.inputs.src, {
+      title: "Subir un logo",
+    }),
+    inLogin = labelToogle("Login", tarjetaLogo.inputs.inLogin),
+    inAdmin = labelToogle("Admin", tarjetaLogo.inputs.inAdmin);
+  tarjetaLogo.template = () => {
+    const content = [src];
+    if (tarjetaLogo.state.isLogo) {
+      content.push(inLogin, inAdmin);
+    }
+    return content;
+  };
+  tarjetaLogo.handleToogle = (e) => {
+    tarjetaLogo.setState({ [e.target.name]: e.target.checked });
+  };
+  tarjetaLogo.inputs.inLogin.addEventListener(
+    "change",
+    tarjetaLogo.handleToogle
+  );
+  tarjetaLogo.inputs.inAdmin.addEventListener(
+    "change",
+    tarjetaLogo.handleToogle
+  );
+  return tarjetaLogo;
 };
-Modificador.prototype.addElements = function (ids) {
-  for (let key in ids) {
-    this[key] = document.getElementById(ids[key]);
-  }
+
+const tarjetaTopBar = () => {
+  const tarjetaTopBar = new TarjetaConfiguracion(
+    "Top Bar",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
+    { isActive: true }
+  );
+  tarjetaTopBar.addKeyWords(["top bar", "barra superior", "admin bar"]);
+  tarjetaTopBar.inputs = {
+    isActive: createToogle(tarjetaTopBar.state.isActive),
+  };
+  const isActive = labelToogle("Mostrar", tarjetaTopBar.inputs.isActive);
+  tarjetaTopBar.template = () => {
+    return [isActive];
+  };
+  tarjetaTopBar.inputs.isActive.addEventListener("change", (e) => {
+    tarjetaTopBar.setState({ isActive: e.target.checked });
+  });
+  return tarjetaTopBar;
 };
 
-const utils = {
-  createModificador: (state = {}, ids = {}) => {
-    const modificador = new Modificador(state);
-
-    modificador.addElements(ids);
-
-    return modificador;
-  },
-};
-
-window.addEventListener("DOMContentLoaded", (e) => {
+const controlPanel = () => {
   const statePanel = { lateralOpen: false };
   const idElements = {
     lateral: "pa-lateral-deslizable",
@@ -72,4 +143,63 @@ window.addEventListener("DOMContentLoaded", (e) => {
     modPanel.setState({ lateralOpen: !modPanel.state.lateralOpen });
   };
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
+};
+
+const controlar = () => {
+  const controlTarjetas = new Modificador();
+  controlTarjetas.state = {
+    buscador: "",
+  };
+  controlTarjetas.tarjetas = [tarjetaLogo(), tarjetaTopBar()];
+  controlTarjetas.addElements({
+    contenedor: "pa-container-config",
+    buscador: "pa-buscador-config",
+  });
+  controlTarjetas.contenedorBuscador = controlTarjetas.contenedor.children[0];
+  controlTarjetas.template = () => {
+    const devuelto = [controlTarjetas.contenedorBuscador];
+    return devuelto.concat(
+      controlTarjetas.tarjetas
+        .filter((value) =>
+          value.keyword.some((word) =>
+            word
+              .toLowerCase()
+              .includes(controlTarjetas.state.buscador.toLowerCase())
+          )
+        )
+        .map((value) => value.tarjeta)
+    );
+  };
+  controlTarjetas.render = () => {
+    const template = controlTarjetas.template();
+    const actual = controlTarjetas.contenedor.children;
+
+    template.forEach((value, index) => {
+      if (actual[index] && value !== actual[index]) {
+        controlTarjetas.contenedor.replaceChild(value, actual[index]);
+      } else if (!actual[index]) {
+        controlTarjetas.contenedor.appendChild(value);
+      }
+    });
+
+    if (actual.length > template.length) {
+      for (let i = template.length; i < actual.length; i++) {
+        controlTarjetas.contenedor.removeChild(actual[i]);
+      }
+    }
+    controlTarjetas.buscador.focus();
+  };
+
+  controlTarjetas.buscador.addEventListener("keyup", () => {
+    controlTarjetas.setState({ buscador: controlTarjetas.buscador.value });
+  });
+
+  controlTarjetas.tarjetas.forEach((value) => value.render());
+  controlTarjetas.render();
+};
+
+window.addEventListener("DOMContentLoaded", (e) => {
+  controlPanel();
+
+  controlar();
 });
