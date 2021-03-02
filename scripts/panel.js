@@ -38,7 +38,7 @@ const labeledInputFile = (input, attributes) => {
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
     "Logo",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
     {
       isLogo: false,
       src: "",
@@ -87,7 +87,7 @@ const tarjetaLogo = () => {
 const tarjetaTopBar = () => {
   const tarjetaTopBar = new TarjetaConfiguracion(
     "Top Bar",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
     { isActive: true }
   );
   tarjetaTopBar.addKeyWords(["top bar", "barra superior", "admin bar"]);
