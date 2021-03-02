@@ -27,8 +27,9 @@ Modificador.prototype.addElements = function (ids) {
   }
 };
 
-function TarjetaConfiguracion(titulo, opciones = {}) {
+function TarjetaConfiguracion(titulo, descripcion = "", opciones = {}) {
   this.titulo = titulo;
+  this.descripcion = descripcion;
 
   this.keyword = [];
 
@@ -37,24 +38,28 @@ function TarjetaConfiguracion(titulo, opciones = {}) {
   this.state = opciones;
 
   this.contenido = utils.createElement("div", {
-    className: "form-control",
+    className: "form-control my-4",
   });
 
   this.botonEnviar = utils.createElement("button", {
-    className:
-      "bg-gray-600 hover:bg-gray-500 rounded focus:outline-none px-2 py-1 mt-2 text-white font-small",
+    className: "btn btn-sm text-white bg-gray-600 hover:bg-gray-500",
     innerText: "Guardar",
   });
   this.classesEnviar = this.botonEnviar.className;
-
   this.botonEnviar.addEventListener("click", (e) => console.log("Enviar"));
 
-  this.tarjeta = utils.createElement("div", { className: "card shadow-lg" }, [
-    utils.createElement("div", { className: "card-body" }, [
-      utils.createElement("h2", { className: "card-title", innerHTML: titulo }),
-      this.contenido,
-      utils.createElement("div", { className: "flex flex-row-reverse" }, [
-        this.botonEnviar,
+  this.tarjeta = utils.createElement("div", {}, [
+    utils.createElement("div", { className: "card shadow-lg" }, [
+      utils.createElement("div", { className: "card-body p-4" }, [
+        utils.createElement("h2", {
+          className: "card-title",
+          innerHTML: titulo,
+        }),
+        utils.createElement("div", { innerText: this.descripcion }),
+        this.contenido,
+        utils.createElement("div", { className: "flex flex-row-reverse" }, [
+          this.botonEnviar,
+        ]),
       ]),
     ]),
   ]);
