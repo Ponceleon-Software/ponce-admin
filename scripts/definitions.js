@@ -48,13 +48,18 @@ function TarjetaConfiguracion(titulo, descripcion = "", opciones = {}) {
   this.classesEnviar = this.botonEnviar.className;
   this.botonEnviar.addEventListener("click", (e) => console.log("Enviar"));
 
-  this.tarjeta = utils.createElement("div", { className: "card shadow-lg" }, [
-    utils.createElement("div", { className: "card-body p-4" }, [
-      utils.createElement("h2", { className: "card-title", innerHTML: titulo }),
-      utils.createElement("div", { innerText: this.descripcion }),
-      this.contenido,
-      utils.createElement("div", { className: "flex flex-row-reverse" }, [
-        this.botonEnviar,
+  this.tarjeta = utils.createElement("div", {}, [
+    utils.createElement("div", { className: "card shadow-lg" }, [
+      utils.createElement("div", { className: "card-body p-4" }, [
+        utils.createElement("h2", {
+          className: "card-title",
+          innerHTML: titulo,
+        }),
+        utils.createElement("div", { innerText: this.descripcion }),
+        this.contenido,
+        utils.createElement("div", { className: "flex flex-row-reverse" }, [
+          this.botonEnviar,
+        ]),
       ]),
     ]),
   ]);
