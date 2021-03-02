@@ -54,6 +54,24 @@ TarjetaConfiguracion.prototype.addContenido = function (nodeList) {
       this.contenido.appendChild(value);
     });
 };
+TarjetaConfiguracion.prototype.render = function () {
+  const template = this.template();
+  const actual = this.contenido.children;
+
+  template.forEach((value, index) => {
+    if (actual[index] && value !== actual[index]) {
+      this.contenido.replaceChild(value, actual[index]);
+    } else if (!actual[index]) {
+      this.contenido.appendChild(value);
+    }
+  });
+
+  if (actual.length > template.length) {
+    for (let i = template.length; i < actual.length; i++) {
+      this.contenido.removeChild(actual[i]);
+    }
+  }
+};
 
 const utils = {
   createModificador: (state = {}, ids = {}) => {
@@ -153,23 +171,24 @@ tarjetaLogo.inputs = {
   inLogin: createToogle(tarjetaLogo.state.isLogin),
   inAdmin: createToogle(tarjetaLogo.state.isAdmin),
 };
+tarjetaLogo.inputs.inLogin.name = "inLogin";
+tarjetaLogo.inputs.inAdmin.name = "inAdmin";
 const src = tarjetaLogo.inputs.src,
   inLogin = labelToogle("Login", tarjetaLogo.inputs.inLogin),
   inAdmin = labelToogle("Admin", tarjetaLogo.inputs.inAdmin);
-tarjetaLogo.render = () => {
-  tarjetaLogo.contenido.innerHTML = "";
-  tarjetaLogo.contenido.appendChild(src);
+tarjetaLogo.template = () => {
+  const content = [src];
   if (tarjetaLogo.state.isLogo) {
-    tarjetaLogo.contenido.appendChild(inLogin);
-    tarjetaLogo.contenido.appendChild(inAdmin);
+    content.push(inLogin, inAdmin);
   }
+  return content;
 };
-tarjetaLogo.inputs.inLogin.addEventListener("click", (e) => {
-  tarjetaLogo.setState({ inLogin: !tarjetaLogo.state.inLogin });
-});
-tarjetaLogo.inputs.inLogin.addEventListener("click", (e) => {
-  tarjetaLogo.setState({ inAdmin: !tarjetaLogo.state.inAdmin });
-});
+const handleToogle = (e) => {
+  tarjetaLogo.setState({ [e.target.name]: e.target.checked });
+  console.log(tarjetaLogo.state);
+};
+tarjetaLogo.inputs.inLogin.addEventListener("change", handleToogle);
+tarjetaLogo.inputs.inAdmin.addEventListener("change", handleToogle);
 
 const controlar = () => {
   const controlTarjetas = new Modificador();
@@ -182,20 +201,37 @@ const controlar = () => {
     buscador: "pa-buscador-config",
   });
   controlTarjetas.contenedorBuscador = controlTarjetas.contenedor.children[0];
-  controlTarjetas.render = () => {
-    controlTarjetas.contenedor.innerHTML = "";
-    controlTarjetas.contenedor.appendChild(controlTarjetas.contenedorBuscador);
-    controlTarjetas.tarjetas
-      .filter((value) =>
-        value.keyword.some((word) =>
-          word
-            .toLowerCase()
-            .includes(controlTarjetas.state.buscador.toLowerCase())
+  controlTarjetas.template = () => {
+    const devuelto = [controlTarjetas.contenedorBuscador];
+    return devuelto.concat(
+      controlTarjetas.tarjetas
+        .filter((value) =>
+          value.keyword.some((word) =>
+            word
+              .toLowerCase()
+              .includes(controlTarjetas.state.buscador.toLowerCase())
+          )
         )
-      )
-      .forEach((value) => {
-        controlTarjetas.contenedor.appendChild(value.tarjeta);
-      });
+        .map((value) => value.tarjeta)
+    );
+  };
+  controlTarjetas.render = () => {
+    const template = controlTarjetas.template();
+    const actual = controlTarjetas.contenedor.children;
+
+    template.forEach((value, index) => {
+      if (actual[index] && value !== actual[index]) {
+        controlTarjetas.contenedor.replaceChild(value, actual[index]);
+      } else if (!actual[index]) {
+        controlTarjetas.contenedor.appendChild(value);
+      }
+    });
+
+    if (actual.length > template.length) {
+      for (let i = template.length; i < actual.length; i++) {
+        controlTarjetas.contenedor.removeChild(actual[i]);
+      }
+    }
     controlTarjetas.buscador.focus();
   };
 
@@ -203,6 +239,7 @@ const controlar = () => {
     controlTarjetas.setState({ buscador: controlTarjetas.buscador.value });
   });
 
+  controlTarjetas.tarjetas.forEach((value) => value.render());
   controlTarjetas.render();
 };
 
@@ -210,5 +247,4 @@ window.addEventListener("DOMContentLoaded", (e) => {
   controlPanel();
 
   controlar();
-  tarjetaLogo.render();
 });
