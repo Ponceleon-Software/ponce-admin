@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Botón flotante</title>
     <link
-      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <link
       href="https://cdn.jsdelivr.net/npm/daisyui@0.11.5/dist/styled.css"
       rel="stylesheet"
       type="text/css"
+    />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
     />
     <link rel="stylesheet" href="../style/ponce-admin.css" />
     <script src="../scripts/definitions.js"></script>
@@ -43,41 +43,34 @@
       id="pa-lateral-deslizable"
       class="bg-white fixed shadow min-h-screen p-4 w-3/4 transition-all duration-500 z-50"
     >
-      <div class="grid grid-cols-4 grid-flow-col gap-4">
-        <div class="col-span-3">
-          <div
-            id="pa-container-config"
-            class="grid grid-cols-2 md:grid-cols-3 gap-2"
-          >
-            <div class="col-span-3">
-              <div class="flex bg-gray-100 rounded m-3">
-                <input
-                  type="search"
-                  placeholder="Buscar"
-                  class="bg-transparent flex-grow px-4 outline-none"
-                  id="pa-buscador-config"
-                />
-                <button class="btn btn-square btn-ghost">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    class="inline-block w-6 h-6 stroke-current"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
+      <div
+        class="grid grid-cols-3 xl:grid-cols-4 gap-4"
+        id="pa-container-config"
+      >
+        <div class="col-span-3 xl:col-span-4">
+          <div class="flex bg-gray-100 rounded m-3">
+            <input
+              type="search"
+              placeholder="Buscar"
+              class="bg-transparent flex-grow px-4 outline-none"
+              id="pa-buscador-config"
+            />
+            <button class="btn btn-square btn-ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                class="inline-block w-6 h-6 stroke-current"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </button>
           </div>
-        </div>
-        <div>
-          <!-- ToDo contenido de la parte izquierda -->
         </div>
       </div>
     </div>

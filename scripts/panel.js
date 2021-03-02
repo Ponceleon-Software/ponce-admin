@@ -5,13 +5,20 @@ const createToogle = (checked) =>
     checked: checked,
   });
 const labelToogle = (nombre, checkbox) =>
-  utils.createElement("label", { className: "cursor-pointer label" }, [
-    utils.createElement("span", { className: "label-text", innerText: nombre }),
-    utils.createElement("div", {}, [
-      checkbox,
-      utils.createElement("span", { className: "toggle-mark" }),
-    ]),
-  ]);
+  utils.createElement(
+    "label",
+    { className: "label justify-around cursor-pointer" },
+    [
+      utils.createElement("span", {
+        className: "label-text",
+        innerText: nombre,
+      }),
+      utils.createElement("div", {}, [
+        checkbox,
+        utils.createElement("span", { className: "toggle-mark" }),
+      ]),
+    ]
+  );
 const labeledInputFile = (input, attributes) => {
   input.className += " hidden";
   return utils.createElement("div", { className: "flex justify-center" }, [
@@ -20,7 +27,7 @@ const labeledInputFile = (input, attributes) => {
       {
         ...attributes,
         htmlFor: input.id,
-        className: "btn btn-circle btn-primary bg-black",
+        className: "btn btn-circle btn-primary",
         innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="30px" height="30px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
       },
       [input]
@@ -29,12 +36,16 @@ const labeledInputFile = (input, attributes) => {
 };
 
 const tarjetaLogo = () => {
-  const tarjetaLogo = new TarjetaConfiguracion("Logo", {
-    isLogo: false,
-    src: "",
-    inLogin: false,
-    inAdmin: false,
-  });
+  const tarjetaLogo = new TarjetaConfiguracion(
+    "Logo",
+    "Lorem ipsum dollor sit amet",
+    {
+      isLogo: false,
+      src: "",
+      inLogin: false,
+      inAdmin: false,
+    }
+  );
   tarjetaLogo.addKeyWords(["logo", "imagen", "image"]);
   tarjetaLogo.inputs = {
     src: utils.createElement("input", {
@@ -74,7 +85,11 @@ const tarjetaLogo = () => {
 };
 
 const tarjetaTopBar = () => {
-  const tarjetaTopBar = new TarjetaConfiguracion("Top Bar", { isActive: true });
+  const tarjetaTopBar = new TarjetaConfiguracion(
+    "Top Bar",
+    "Lorem ipsum dolor sit amet",
+    { isActive: true }
+  );
   tarjetaTopBar.addKeyWords(["top bar", "barra superior", "admin bar"]);
   tarjetaTopBar.inputs = {
     isActive: createToogle(tarjetaTopBar.state.isActive),
