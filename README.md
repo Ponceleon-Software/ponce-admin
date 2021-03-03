@@ -1,7 +1,7 @@
 # Folder Structure
 
 ```
-Ponce-admin
+ponce-admin
 ├─ assets
 │  └─ img
 │     └─ logo-ponceleon.svg
