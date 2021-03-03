@@ -85,6 +85,8 @@ const tarjetaLogo = () => {
 };
 
 const tarjetaTopBar = () => {
+  const changeTopBar = () => wpRestApi("topbar");
+
   const tarjetaTopBar = new TarjetaConfiguracion(
     "Top Bar",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
