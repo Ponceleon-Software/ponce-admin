@@ -9,9 +9,9 @@ add_action( 'rest_api_init', function () {
 function hideTopbar(){
 	global $wpdb;
 	$value = $wpdb->get_var( $wpdb->prepare(
-    " SELECT is_active FROM {$wpdb->prefix}ponceadmin WHERE name = 'ponceTopBar' "
+    " SELECT is_active FROM {$wpdb->prefix}ponce WHERE name = 'ponceTopBar' "
 	) );
-	$table_name = $wpdb->prefix . 'ponceadmin';
+	$table_name = $wpdb->prefix . 'ponce';
 	$result=$wpdb->update($table_name, array('is_active' => !$value), array( 'name' =>'ponceTopBar' ));
 	return $result;
 }

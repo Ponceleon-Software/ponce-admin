@@ -2,7 +2,7 @@
 
 global $wpdb;
 $value = $wpdb->get_var( $wpdb->prepare(
-    " SELECT is_active FROM {$wpdb->prefix}ponceadmin WHERE name = 'ponceTopBar' "
+    " SELECT is_active FROM {$wpdb->prefix}ponce WHERE name = 'ponceTopBar' "
 ) );
 
 

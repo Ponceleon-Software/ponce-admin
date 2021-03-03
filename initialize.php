@@ -2,43 +2,46 @@
 include 'settings.php';
 global $todb;
 $todb =$properties;
-global $ponceadmin_db_version;
-$ponceadmin_db_version = '1.0';
+global $ponce_db_version;
+$ponce_db_version = '1.0';
 
-function ponceadmin_install() {
+function ponce_install() {
 	global $wpdb;
-	global $ponceadmin_db_version;
-	$table_name = $wpdb->prefix . 'ponceadmin';
+	global $ponce_db_version;
+	$table_name = $wpdb->prefix . 'ponce';
 	$charset_collate = $wpdb->get_charset_collate();
 	$sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		name tinytext NOT NULL,
+		description VARCHAR(1000),
 		is_active BIT NOT NULL,
-		value VARCHAR(1000),
+		options VARCHAR(1000),
+		keywords VARCHAR(1000),
 		UNIQUE KEY id (id)
 	) $charset_collate;";
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
-	add_option( 'ponceadmin_db_version', $ponceadmin_db_version );
+	add_option( 'ponce_db_version', $ponce_db_version );
 }
 
-function ponceadmin_install_data() {
+function ponce_install_data() {
 	global $wpdb;
 	global $todb;
-	$table_name = $wpdb->prefix . 'ponceadmin';
+	$table_name = $wpdb->prefix . 'ponce';
 	$sql = '';
  	foreach($todb as $g) {
+		$keywordstoarr=implode("','", $g['keywords']);
 	    if($sql != '') $sql.= ',';
-	    if(!is_array($g['value'])){
-	    	$sql .= '("'. $g['name'] .'", "'. $g['is_active'].'", "'. $g['value'] .'")';
+	    if(!is_array($g['options'])){
+	    	$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $g['options'] .'", "'. $keywordstoarr .'")';
 	    }
 		else{
-			$valuetoarr=implode("','", $g['value']);
-			$sql .= '("'. $g['name'] .'", "'. $g['is_active'].'", "'. $valuetoarr .'")';
+			$optionstoarr= str_replace('=', ':', http_build_query( $g['options'], null, ','));
+			$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $optionstoarr .'", "'. $keywordstoarr .'")';
 		}
 	}
 	if($sql != '') {
-	    $sql = "INSERT INTO wp_ponceadmin (name,is_active,value) VALUES ". $sql;
+	    $sql = "INSERT INTO wp_ponce (name,description,is_active,options,keywords) VALUES ". $sql;
 	}
 
 	dbDelta( $sql );
