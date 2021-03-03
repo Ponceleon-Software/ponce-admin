@@ -14,10 +14,8 @@ window.addEventListener("load", function () {
   element.appendChild(frame);
   let iframe = document.getElementById("iframe");
   iframe.addEventListener("load", function (e) {
-    let p_button = iframe.contentWindow.document.getElementById(
-      "pa-button-fixed"
-    );
-    p_button.addEventListener("click", function () {
+    const documentIframe = iframe.contentWindow.document;
+    const changeIframe = function () {
       if (iframe.style.width != "100vw") {
         iframe.style.width = "100vw";
         iframe.style.top = "32px";
@@ -28,7 +26,12 @@ window.addEventListener("load", function () {
           iframe.style = null;
         }, 350);
       }
-    });
+    };
+    let p_button = [
+      documentIframe.getElementById("pa-button-fixed"),
+      documentIframe.getElementById("pa-cubierta"),
+    ];
+    p_button.forEach((value) => value.addEventListener("click", changeIframe));
   });
 });
 

@@ -1,25 +1,4 @@
-const createToogle = (checked) =>
-  utils.createElement("input", {
-    type: "checkbox",
-    className: "toggle toggle-primary",
-    checked: checked,
-  });
-const labelToogle = (nombre, checkbox) =>
-  utils.createElement(
-    "label",
-    { className: "label justify-around cursor-pointer" },
-    [
-      utils.createElement("span", {
-        className: "label-text",
-        innerText: nombre,
-      }),
-      utils.createElement("div", {}, [
-        checkbox,
-        utils.createElement("span", { className: "toggle-mark" }),
-      ]),
-    ]
-  );
-const labeledInputFile = (input, attributes) => {
+/*const labeledInputFile = (input, attributes) => {
   input.className += " hidden";
   return utils.createElement("div", { className: "flex justify-center" }, [
     utils.createElement(
@@ -33,7 +12,7 @@ const labeledInputFile = (input, attributes) => {
       [input]
     ),
   ]);
-};
+};*/
 
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
@@ -107,12 +86,17 @@ const tarjetaTopBar = () => {
   return tarjetaTopBar;
 };
 
+/**
+ * Función que inicializa el control del panel lateral de forma
+ * reactiva
+ */
 const controlPanel = () => {
   const statePanel = { lateralOpen: false };
   const idElements = {
     lateral: "pa-lateral-deslizable",
     botonAbrir: "pa-button-fixed",
     contenedorBoton: "pa-contenedor-boton-fixed",
+    cubierta: "pa-cubierta",
   };
 
   //Se inicializa un objeto modificador con un estado lateralOpen que
@@ -123,6 +107,7 @@ const controlPanel = () => {
   //Guardo las clases iniciales de los elementos
   const classesL = modPanel.lateral.className;
   const classesBoton = modPanel.contenedorBoton.className;
+  const classesCubierta = modPanel.cubierta.className;
   const imgBoton = modPanel.botonAbrir.innerHTML;
 
   //Creo y ejecuto por primera vez la función render que se encarga
@@ -136,6 +121,8 @@ const controlPanel = () => {
       (modPanel.state.lateralOpen
         ? " right-3/4 top-12 -mt-6 h-8 w-8"
         : " right-0 top-1/2 -mt-6 h-12 w-12");
+    modPanel.cubierta.className =
+      classesCubierta + (modPanel.state.lateralOpen ? "" : " hidden");
     modPanel.botonAbrir.innerHTML = modPanel.state.lateralOpen ? "X" : imgBoton;
   };
   modPanel.render();
@@ -146,6 +133,7 @@ const controlPanel = () => {
     modPanel.setState({ lateralOpen: !modPanel.state.lateralOpen });
   };
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
+  modPanel.cubierta.addEventListener("click", setLateralOpen);
 };
 
 const controlar = async () => {
