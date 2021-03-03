@@ -65,7 +65,7 @@ function TarjetaConfiguracion(
       e.preventDefault();
     }
     this.doingAction = true;
-    await this.dbaction();
+    //await this.dbaction();
     this.doingAction = false;
   });
 
@@ -140,7 +140,7 @@ const utils = {
       className: "toggle toggle-primary",
       checked: checked,
     });
-    const all = utils.createElement("div", {}, [
+    const all = utils.createElement("label", { className: "label" }, [
       input,
       utils.createElement("span", { className: "toggle-mark" }),
     ]);
