@@ -52,7 +52,7 @@ function getSettings(){
 //enqueues
 
 wp_enqueue_style('frame-css','/wp-content/plugins/Ponce-admin/style/frame.css');
-wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/scripts/main.js', array(), null, true );    
+wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/js/main.js', array(), null, true );    
 register_activation_hook( __FILE__, 'ponce_install' );
 register_activation_hook( __FILE__, 'ponce_install_data' );
 ?>
