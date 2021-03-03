@@ -145,7 +145,10 @@ const controlPanel = () => {
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
 };
 
-const controlar = () => {
+const controlar = async () => {
+  const settings = await wpRestApi("settings");
+  console.log(settings);
+
   const controlTarjetas = new Modificador();
   controlTarjetas.state = {
     buscador: "",
