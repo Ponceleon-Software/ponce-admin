@@ -27,84 +27,76 @@ Modificador.prototype.addElements = function (ids) {
   }
 };
 
-function TarjetaConfiguracion(titulo, descripcion = "", opciones = {}) {
+/**
+ * Crea una tarjeta estandar del panel
+ * @param {string} titulo
+ * @param {string} descripcion
+ * @param {function} dbaction
+ * @param {any} ajustes
+ */
+function TarjetaConfiguracion(
+  titulo,
+  descripcion = "",
+  dbaction = () => {},
+  ajustes = {}
+) {
   this.titulo = titulo;
   this.descripcion = descripcion;
+  this.dbaction = dbaction;
+  this.ajustes = ajustes;
 
   this.keyword = [];
-
-  this.initOptions = JSON.parse(JSON.stringify(opciones));
-
-  this.state = opciones;
 
   this.contenido = utils.createElement("div", {
     className: "form-control my-4",
   });
 
-  this.botonEnviar = utils.createElement("button", {
+  this.botonAjustes = utils.createElement("button", {
     className: "btn btn-sm text-white bg-gray-600 hover:bg-gray-500",
-    innerText: "Guardar",
+    innerText: "Ir Ajustes",
   });
-  this.classesEnviar = this.botonEnviar.className;
-  this.botonEnviar.addEventListener("click", (e) => console.log("Enviar"));
+  this.botonAjustes.addEventListener("click", (e) => console.log(this.ajustes));
 
-  this.tarjeta = utils.createElement("div", {}, [
-    utils.createElement("div", { className: "card shadow-lg" }, [
+  this.doingAction = false;
+  const [checkContainer, checkInput] = utils.createToogle(false);
+  this.checkbox = checkInput;
+  this.checkbox.addEventListener("click", async (e) => {
+    if (this.doingAction) {
+      e.preventDefault();
+    }
+    this.doingAction = true;
+    await this.dbaction();
+    this.doingAction = false;
+  });
+
+  this.tarjeta = utils.createElement(
+    "div",
+    { className: "card shadow-lg rounded-xl" },
+    [
       utils.createElement("div", { className: "card-body p-4" }, [
         utils.createElement("h2", {
-          className: "card-title",
-          innerHTML: titulo,
+          className: "card-title text-base",
+          innerHTML: this.titulo,
         }),
-        utils.createElement("div", { innerText: this.descripcion }),
-        this.contenido,
-        utils.createElement("div", { className: "flex flex-row-reverse" }, [
-          this.botonEnviar,
-        ]),
+        utils.createElement("div", {
+          innerHTML: this.descripcion,
+          className: "text-sm max-h-10 overflow-hidden pa-max-lines-2",
+        }),
+        utils.createElement(
+          "div",
+          { className: "flex justify-between items-center mt-2" },
+          [checkContainer, this.botonAjustes]
+        ),
       ]),
-    ]),
-  ]);
+    ]
+  );
 }
-TarjetaConfiguracion.prototype = Object.create(Modificador.prototype);
+/**
+ * Añade a la tarjeta palabras clave para ayudar al buscador
+ * @param {string[]} keywords Arreglo de palabras clave a añadir
+ */
 TarjetaConfiguracion.prototype.addKeyWords = function (keywords) {
   this.keyword = this.keyword.concat(keywords);
-};
-TarjetaConfiguracion.prototype.addContenido = function (nodeList) {
-  nodeList
-    .filter((value) => value instanceof Node)
-    .forEach((value) => {
-      this.contenido.appendChild(value);
-    });
-};
-TarjetaConfiguracion.prototype.render = function () {
-  const template = this.template();
-  const actual = this.contenido.children;
-
-  template.forEach((value, index) => {
-    if (actual[index] && value !== actual[index]) {
-      this.contenido.replaceChild(value, actual[index]);
-    } else if (!actual[index]) {
-      this.contenido.appendChild(value);
-    }
-  });
-
-  if (actual.length > template.length) {
-    for (let i = template.length; i < actual.length; i++) {
-      this.contenido.removeChild(actual[i]);
-    }
-  }
-
-  let cambio = false;
-  for (let key in this.state) {
-    if (this.initOptions[key] !== this.state[key]) {
-      cambio = true;
-      break;
-    }
-  }
-  if (cambio) {
-    this.botonEnviar.className = this.classesEnviar;
-  } else {
-    this.botonEnviar.className = "hidden";
-  }
 };
 
 const utils = {
@@ -116,7 +108,7 @@ const utils = {
     return modificador;
   },
   createElementFromHTML: (htmlString) => {
-    var div = document.createElement("div");
+    const div = document.createElement("div");
     div.innerHTML = htmlString.trim();
     return div.firstChild;
   },
@@ -134,5 +126,24 @@ const utils = {
     });
 
     return elemento;
+  },
+  /**
+   * Crea un tooglede daisy ui sin el label
+   * @param {boolean} checked El estado inicial de la prpiedad
+   * checked del input
+   * @returns {[Node, Node]} Un arreglo con el toogle completo en
+   * la primera posición y el input solo en la segunda
+   */
+  createToogle: (checked) => {
+    const input = utils.createElement("input", {
+      type: "checkbox",
+      className: "toggle toggle-primary",
+      checked: checked,
+    });
+    const all = utils.createElement("div", {}, [
+      input,
+      utils.createElement("span", { className: "toggle-mark" }),
+    ]);
+    return [all, input];
   },
 };

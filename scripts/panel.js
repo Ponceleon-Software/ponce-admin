@@ -37,17 +37,17 @@ const labeledInputFile = (input, attributes) => {
 
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
-    "Logo",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
-    {
+    "Ponce Logo",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem"
+    /*{
       isLogo: false,
       src: "",
       inLogin: false,
       inAdmin: false,
-    }
+    }*/
   );
   tarjetaLogo.addKeyWords(["logo", "imagen", "image"]);
-  tarjetaLogo.inputs = {
+  /*tarjetaLogo.inputs = {
     src: utils.createElement("input", {
       type: "file",
       accept: "image/jpeg,image/png",
@@ -80,20 +80,21 @@ const tarjetaLogo = () => {
   tarjetaLogo.inputs.inAdmin.addEventListener(
     "change",
     tarjetaLogo.handleToogle
-  );
+  );*/
   return tarjetaLogo;
 };
 
 const tarjetaTopBar = () => {
-  const changeTopBar = () => wpRestApi("topbar");
+  const changeTopBar = async () => await wpRestApi("topbar");
 
   const tarjetaTopBar = new TarjetaConfiguracion(
-    "Top Bar",
+    "Ponce Topbar",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
-    { isActive: true }
+    changeTopBar
+    //{ isActive: true }
   );
   tarjetaTopBar.addKeyWords(["top bar", "barra superior", "admin bar"]);
-  tarjetaTopBar.inputs = {
+  /*tarjetaTopBar.inputs = {
     isActive: createToogle(tarjetaTopBar.state.isActive),
   };
   const isActive = labelToogle("Mostrar", tarjetaTopBar.inputs.isActive);
@@ -102,7 +103,7 @@ const tarjetaTopBar = () => {
   };
   tarjetaTopBar.inputs.isActive.addEventListener("change", (e) => {
     tarjetaTopBar.setState({ isActive: e.target.checked });
-  });
+  });*/
   return tarjetaTopBar;
 };
 
@@ -199,7 +200,6 @@ const controlar = async () => {
     controlTarjetas.setState({ buscador: controlTarjetas.buscador.value });
   });
 
-  controlTarjetas.tarjetas.forEach((value) => value.render());
   controlTarjetas.render();
 };
 
