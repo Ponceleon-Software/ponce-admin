@@ -85,6 +85,8 @@ const tarjetaLogo = () => {
 };
 
 const tarjetaTopBar = () => {
+  const changeTopBar = () => wpRestApi("topbar");
+
   const tarjetaTopBar = new TarjetaConfiguracion(
     "Top Bar",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat vestibulum. Sed suscipit sollicitudin sem",
@@ -145,7 +147,10 @@ const controlPanel = () => {
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
 };
 
-const controlar = () => {
+const controlar = async () => {
+  const settings = await wpRestApi("settings");
+  console.log(settings);
+
   const controlTarjetas = new Modificador();
   controlTarjetas.state = {
     buscador: "",

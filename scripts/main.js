@@ -32,7 +32,7 @@ window.addEventListener("load", function () {
   });
 });
 
-//Ruta dinámica implementada (kindof, falta testear fuera de wp-admin)
+/*/Ruta dinámica implementada (kindof, falta testear fuera de wp-admin)
 async function wpRestApi() {
   let response;
   try {
@@ -53,7 +53,7 @@ async function wpRestApi() {
 let result = wpRestApi();
 result.then((r) => {
   console.log(r);
-});
+});*/
 
 function getHomeUrl() {
   var href = window.location.href;
