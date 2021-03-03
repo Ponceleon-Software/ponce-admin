@@ -29,9 +29,7 @@ Ponce-admin
 
 ```
 * [José Ponceleón](https://github.com/ponceleon "@ponceleon") **(Director)**
-
 * [Cesar Pérez](https://github.com/cesaraugp "@cesaraugp") **(Developer)**
-
 * [Angel Suárez](https://github.com/angeljsb "@angeljsb") **(Developer)**
 
 [Ponceleón Software](https://github.com/Ponceleon-Software "Ponceleón Software")
