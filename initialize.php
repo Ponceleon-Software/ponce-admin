@@ -13,6 +13,7 @@ function ponce_install() {
 	$sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		name tinytext NOT NULL,
+		description VARCHAR(1000),
 		is_active BIT NOT NULL,
 		options VARCHAR(1000),
 		keywords VARCHAR(1000),
@@ -32,15 +33,15 @@ function ponce_install_data() {
 		$keywordstoarr=implode("','", $g['keywords']);
 	    if($sql != '') $sql.= ',';
 	    if(!is_array($g['options'])){
-	    	$sql .= '("'. $g['name'] .'", "'. $g['is_active'].'", "'. $g['options'] .'", "'. $keywordstoarr .'")';
+	    	$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $g['options'] .'", "'. $keywordstoarr .'")';
 	    }
 		else{
 			$optionstoarr= str_replace('=', ':', http_build_query( $g['options'], null, ','));
-			$sql .= '("'. $g['name'] .'", "'. $g['is_active'].'", "'. $optionstoarr .'", "'. $keywordstoarr .'")';
+			$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $optionstoarr .'", "'. $keywordstoarr .'")';
 		}
 	}
 	if($sql != '') {
-	    $sql = "INSERT INTO wp_ponce (name,is_active,options,keywords) VALUES ". $sql;
+	    $sql = "INSERT INTO wp_ponce (name,description,is_active,options,keywords) VALUES ". $sql;
 	}
 
 	dbDelta( $sql );

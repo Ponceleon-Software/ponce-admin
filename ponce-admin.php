@@ -37,6 +37,7 @@ function getSettings(){
 		
     	$a=array(
     		'name'=>$row->name,
+    		'description'=>$row->description,
     		'is_active'=>$row->is_active,
     		'options'=>json_encode($finalArray),
     		'keywords'=>explode(',',$row->keywords),

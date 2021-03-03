@@ -3,6 +3,7 @@
 $properties = array(
         array(
             'name' => 'ponceTopBar',
+            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat ',
             'is_active'=>false,
             'options' => 'valor',
             'keywords'=>array("top bar", "barra superior", "admin bar")
@@ -10,6 +11,7 @@ $properties = array(
         ),
         array(
             'name' => 'ponceLogo',
+            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat ',
             'is_active'=>false,
             'options' =>array(		
     		"src" =>'false',
