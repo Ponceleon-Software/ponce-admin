@@ -20,6 +20,10 @@
   animation: button-pop 400ms ease-out;
 }
 
+.pa-resize-border {
+  cursor: ew-resize;
+}
+
 @keyframes custom-ping {
   100% {
     transform: scale(3);

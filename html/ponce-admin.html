@@ -47,9 +47,14 @@
     </div>
     <div
       id="pa-lateral-deslizable"
-      class="bg-white fixed shadow min-h-screen p-4 w-3/4 transition-all duration-500 z-50"
+      class="bg-white fixed shadow min-h-screen w-3/4 transition-all duration-500 z-50"
     >
-      <div class="mx-3">
+      <div
+        class="absolute h-full w-2 pa-resize-border"
+        draggable="true"
+        id="pa-resizer"
+      ></div>
+      <div class="m-7">
         <div class="flex bg-gray-100 rounded-xl my-3">
           <input
             type="search"

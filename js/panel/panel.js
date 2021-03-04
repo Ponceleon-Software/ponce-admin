@@ -22,11 +22,26 @@ const controlPanel = () => {
   const classesCubierta = modPanel.cubierta.className;
   const imgBoton = modPanel.botonAbrir.innerHTML;
 
+  let prevStyle = null;
+
   //Creo y ejecuto por primera vez la función render que se encarga
   //de modificar las clases css del elemento según el state
   modPanel.render = () => {
     modPanel.lateral.className =
       classesL + (modPanel.state.lateralOpen ? " right-0" : " -right-3/4");
+
+    if (!modPanel.state.lateralOpen) {
+      prevStyle = {
+        transition: modPanel.lateral.style.transition,
+        width: modPanel.lateral.style.width,
+      };
+      modPanel.lateral.style = null;
+    } else {
+      modPanel.lateral.style.width = prevStyle.width;
+      setTimeout(() => {
+        modPanel.lateral.style.transition = prevStyle.transition;
+      }, 500);
+    }
 
     modPanel.contenedorBoton.className =
       classesBoton +
@@ -46,6 +61,41 @@ const controlPanel = () => {
   };
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
   modPanel.cubierta.addEventListener("click", setLateralOpen);
+
+  initResize();
+};
+
+const initResize = () => {
+  const panel = document.getElementById("pa-lateral-deslizable");
+  const draggableBorder = document.getElementById("pa-resizer");
+
+  const botonAbrir = document.getElementById("pa-contenedor-boton-fixed");
+
+  /**
+   * Función que engancha el ancho del panel al mouse
+   * @param {MouseEvent} e El evento del mouse
+   */
+  const move = (e) => {
+    botonAbrir.style.right = panel.style.width = `${
+      window.innerWidth - e.screenX
+    }px`;
+  };
+
+  const onMouseOut = (e) => {
+    botonAbrir.style.transition = panel.style.transition = "none";
+    window.addEventListener("mousemove", move);
+  };
+
+  const onMouseDown = (e) => {
+    draggableBorder.addEventListener("mouseout", onMouseOut);
+  };
+
+  draggableBorder.addEventListener("mousedown", onMouseDown);
+
+  window.addEventListener("mouseup", (e) => {
+    window.removeEventListener("mousemove", move);
+    draggableBorder.removeEventListener("mouseout", onMouseOut);
+  });
 };
 
 window.addEventListener("DOMContentLoaded", (e) => {
