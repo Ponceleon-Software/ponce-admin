@@ -16,6 +16,10 @@
   -webkit-box-orient: vertical;
 }
 
+.pa-aparecer {
+  animation: button-pop 400ms ease-out;
+}
+
 @keyframes custom-ping {
   100% {
     transform: scale(3);
