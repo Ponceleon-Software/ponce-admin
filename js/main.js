@@ -18,9 +18,9 @@ window.addEventListener("load", function () {
     const changeIframe = function () {
       if (iframe.style.width != "100vw") {
         iframe.style.width = "100vw";
-        iframe.style.top = "32px";
+        iframe.style.top = "0";
         iframe.style.marginTop = "0";
-        iframe.style.height = "calc(100% - 32px)";
+        iframe.style.height = "100%";
       } else {
         setTimeout(function () {
           iframe.style = null;
