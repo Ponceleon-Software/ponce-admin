@@ -16,8 +16,7 @@ async function wpRestApi(path) {
       mode: "cors",
       credentials: "include",
     });
-    let data = await response.json();
-    return data;
+    return response;
   } catch (e) {
     alert(e);
   }
