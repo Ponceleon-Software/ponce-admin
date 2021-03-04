@@ -2,4 +2,4 @@
 javascript: js/**/*
 wordpress: endpoints/**/*
 html: html/**/*
-visual: css/**/*
+style: css/**/*
