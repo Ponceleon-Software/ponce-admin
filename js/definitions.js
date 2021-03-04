@@ -31,7 +31,7 @@ Modificador.prototype.addElements = function (ids) {
  * Crea una tarjeta estandar del panel
  * @param {string} titulo
  * @param {string} descripcion
- * @param {function} dbaction
+ * @param {() => void} dbaction
  * @param {any} ajustes
  */
 function TarjetaConfiguracion(
@@ -57,19 +57,7 @@ function TarjetaConfiguracion(
   });
   this.botonAjustes.addEventListener("click", (e) => console.log(this.ajustes));
 
-  this.doingAction = false;
-  const [checkContainer, checkInput] = utils.createToogle(false);
-  this.switch = checkInput;
-  this.switch.addEventListener("click", async (e) => {
-    if (this.doingAction) {
-      e.preventDefault();
-      return;
-    }
-    this.doingAction = true;
-    await this.dbaction();
-    console.log("Topbar cambiado");
-    this.doingAction = false;
-  });
+  this.switch = new LockeableSwitch(this.dbaction, () => console.log("finish"));
 
   this.tarjeta = utils.createElement(
     "div",
@@ -87,7 +75,7 @@ function TarjetaConfiguracion(
         utils.createElement(
           "div",
           { className: "flex justify-between items-center mt-2" },
-          [checkContainer, this.botonAjustes]
+          [this.switch.elementoPadre, this.botonAjustes]
         ),
       ]),
     ]
@@ -105,7 +93,98 @@ TarjetaConfiguracion.prototype.addKeyWords = function (keywords) {
  * @param {boolean} checked Si el switch va estar activo o no
  */
 TarjetaConfiguracion.prototype.setSwitch = function (checked) {
-  this.switch.checked = checked;
+  this.switch.setChecked(checked);
+};
+
+/**
+ * Encapsula funcionalidad compartida entre todoslos componentes
+ * reactivos
+ * @param {Node} elemento
+ * @param {() => Node[]} template
+ */
+function Componente(elemento = null, template = null) {
+  this.elementoPadre = elemento;
+  this.template = template;
+}
+Componente.prototype = Object.create(Modificador.prototype);
+Componente.prototype.render = function () {
+  const template = this.template();
+  const children = this.elementoPadre.children;
+
+  template.forEach((value, index) => {
+    if (children[index]) {
+      if (value !== children[index]) {
+        this.elementoPadre.replaceChild(value, children[index]);
+      }
+    } else {
+      this.elementoPadre.appendChild(value);
+    }
+  });
+
+  if (children.length > template.length) {
+    for (let i = template.length; i < children.length; i++) {
+      this.elementoPadre.removeChild(children[i]);
+    }
+  }
+};
+
+/**
+ *
+ * @param {() => Promise<void>} action
+ * @param {() => void} onFinish
+ */
+function LockeableSwitch(action, onFinish = null) {
+  this.state = { locked: false };
+
+  const [label, input] = utils.createToogle();
+  this.label = label;
+  this.input = input;
+  this.toggleMark = this.label.querySelector("span.toggle-mark");
+
+  this.loadCircle = utils.createElement("span", {
+    className:
+      "w-4 h-4 ml-2 rounded-full border-2 border-gray-200 animate-spin",
+    style: "border-top-color: gray",
+  });
+
+  this.elementoPadre = utils.createElement(
+    "div",
+    { className: "flex items-center" },
+    [this.label]
+  );
+
+  this.action = action;
+  this.onFinish = onFinish;
+
+  this.input.addEventListener("click", async (e) => {
+    if (this.state.locked) {
+      e.preventDefault();
+      return;
+    }
+    this.setState({ locked: true });
+    const response = await this.action();
+    this.setState({ locked: false });
+    if (response === 1 && this.onFinish) {
+      this.onFinish();
+    }
+  });
+}
+LockeableSwitch.prototype = Object.create(Componente.prototype);
+LockeableSwitch.prototype.template = function () {
+  this.toggleMark.style = this.state.locked ? "cursor: default;" : "";
+
+  const temp = [this.label];
+  if (this.state.locked) {
+    temp.push(this.loadCircle);
+  }
+  return temp;
+};
+/**
+ *
+ * @param {boolean} checked Si el switch está activo no
+ */
+LockeableSwitch.prototype.setChecked = function (checked) {
+  this.input.checked = checked;
 };
 
 const utils = {
@@ -121,6 +200,13 @@ const utils = {
     div.innerHTML = htmlString.trim();
     return div.firstChild;
   },
+  /**
+   * Función para facilitar la creación de elementos del DOM
+   * @param {string} tagName Nombre de la etiqueta del elemento a crear
+   * @param {any} attributes Objeto con los atributos html del elemento
+   * @param {Node[]} children Arreglo de elementos hijos
+   * @returns {Node}
+   */
   createElement: (tagName, attributes = {}, children = []) => {
     const elemento = document.createElement(tagName);
 
@@ -138,12 +224,12 @@ const utils = {
   },
   /**
    * Crea un tooglede daisy ui sin el label
-   * @param {boolean} checked El estado inicial de la prpiedad
+   * @param {boolean} checked El estado inicial de la propiedad
    * checked del input
    * @returns {[Node, Node]} Un arreglo con el toogle completo en
    * la primera posición y el input solo en la segunda
    */
-  createToogle: (checked) => {
+  createToogle: (checked = false) => {
     const input = utils.createElement("input", {
       type: "checkbox",
       className: "toggle toggle-primary",

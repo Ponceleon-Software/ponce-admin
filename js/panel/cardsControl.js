@@ -16,14 +16,13 @@ const createAllCards = (settings) => {
       .join(" ");
     const descripcion = value.description;
     const isActive = value.is_active === "1";
+    const dbaction = cardsEndpoints[value.name]
+      ? async () => await wpRestApi(cardsEndpoints[value.name])
+      : () => {};
 
-    const tarjeta = new TarjetaConfiguracion(name, descripcion);
+    const tarjeta = new TarjetaConfiguracion(name, descripcion, dbaction);
     tarjeta.setSwitch(isActive);
     tarjeta.addKeyWords(value.keywords);
-    if (cardsEndpoints[value.name]) {
-      tarjeta.dbaction = async () =>
-        await wpRestApi(cardsEndpoints[value.name]);
-    }
     return tarjeta;
   });
 };
