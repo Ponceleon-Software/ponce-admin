@@ -1,3 +1,33 @@
+const cardsEndpoints = {
+  ponceTopBar: "topbar",
+};
+
+/**
+ * Toma el arreglo de configuraciones de la base de datos y devuelve
+ * las tarjetas correspondientes
+ * @param {any[]} settings
+ * @returns {TarjetaConfiguracion[]}
+ */
+const createAllCards = (settings) => {
+  return settings.map((value) => {
+    const name = value.name
+      .split(/([A-Z][a-z]*)/)
+      .filter((value) => Boolean(value))
+      .join(" ");
+    const descripcion = value.description;
+    const isActive = value.is_active === "1";
+
+    const tarjeta = new TarjetaConfiguracion(name, descripcion);
+    tarjeta.setSwitch(isActive);
+    tarjeta.addKeyWords(value.keywords);
+    if (cardsEndpoints[value.name]) {
+      tarjeta.dbaction = async () =>
+        await wpRestApi(cardsEndpoints[value.name]);
+    }
+    return tarjeta;
+  });
+};
+
 /**
  * Controla la salida de las tarjetas y la manera en que se van a mostrar
  */
@@ -9,7 +39,7 @@ const cardsControl = async () => {
   controlTarjetas.state = {
     buscador: "",
   };
-  controlTarjetas.tarjetas = [tarjetaLogo(), tarjetaTopBar()];
+  controlTarjetas.tarjetas = createAllCards(settings);
   controlTarjetas.addElements({
     contenedor: "pa-container-config",
     buscador: "pa-buscador-config",

@@ -1,3 +1,4 @@
+/* Este archivo se volvió innecesario por el momento
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
     "Ponce Logo",
