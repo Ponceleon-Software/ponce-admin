@@ -59,13 +59,15 @@ function TarjetaConfiguracion(
 
   this.doingAction = false;
   const [checkContainer, checkInput] = utils.createToogle(false);
-  this.checkbox = checkInput;
-  this.checkbox.addEventListener("click", async (e) => {
+  this.switch = checkInput;
+  this.switch.addEventListener("click", async (e) => {
     if (this.doingAction) {
       e.preventDefault();
+      return;
     }
     this.doingAction = true;
-    //await this.dbaction();
+    await this.dbaction();
+    console.log("Topbar cambiado");
     this.doingAction = false;
   });
 
@@ -75,7 +77,7 @@ function TarjetaConfiguracion(
     [
       utils.createElement("div", { className: "card-body p-4" }, [
         utils.createElement("h2", {
-          className: "card-title text-base",
+          className: "card-title text-base capitalize",
           innerHTML: this.titulo,
         }),
         utils.createElement("div", {
@@ -97,6 +99,13 @@ function TarjetaConfiguracion(
  */
 TarjetaConfiguracion.prototype.addKeyWords = function (keywords) {
   this.keyword = this.keyword.concat(keywords);
+};
+/**
+ * Cambia el estado del switch sin alterar la db
+ * @param {boolean} checked Si el switch va estar activo o no
+ */
+TarjetaConfiguracion.prototype.setSwitch = function (checked) {
+  this.switch.checked = checked;
 };
 
 const utils = {
