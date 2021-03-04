@@ -43,7 +43,6 @@ function ponce_install_data() {
 	if($sql != '') {
 	    $sql = "INSERT INTO wp_ponce (name,description,is_active,options,keywords) VALUES ". $sql;
 	}
-
 	dbDelta( $sql );
 }
 ?>
