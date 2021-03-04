@@ -57,7 +57,32 @@ function TarjetaConfiguracion(
   });
   this.botonAjustes.addEventListener("click", (e) => console.log(this.ajustes));
 
-  this.switch = new LockeableSwitch(this.dbaction, () => console.log("finish"));
+  /**
+   * Muestra una alerta para indicar al usuario si el request fue
+   * exitoso o no
+   * @param {boolean} success Indica si el request fue exitoso
+   */
+  const showAlert = (success) => {
+    const body = this.tarjeta.firstChild;
+
+    const show = (alerta) => {
+      body.appendChild(alerta);
+      setTimeout(() => {
+        body.removeChild(alerta);
+      }, 2000);
+    };
+
+    if (success) {
+      show(this.alerta);
+    } else {
+      show(this.alertaEror);
+    }
+  };
+
+  this.switch = new LockeableSwitch(this.dbaction, showAlert);
+
+  this.alerta = utils.alertaCambios("success", "Se han guardado los cambios");
+  this.alertaEror = utils.alertaCambios("error", "Ha ocurrido un error");
 
   this.tarjeta = utils.createElement(
     "div",
@@ -131,7 +156,7 @@ Componente.prototype.render = function () {
 /**
  *
  * @param {() => Promise<void>} action
- * @param {() => void} onFinish
+ * @param {(success:boolean) => void} onFinish
  */
 function LockeableSwitch(action, onFinish = null) {
   this.state = { locked: false };
@@ -164,8 +189,12 @@ function LockeableSwitch(action, onFinish = null) {
     this.setState({ locked: true });
     const response = await this.action();
     this.setState({ locked: false });
-    if (response === 1 && this.onFinish) {
-      this.onFinish();
+    if (this.onFinish) {
+      const success = response === 1;
+      this.onFinish(success);
+      if (!success) {
+        e.preventDefault();
+      }
     }
   });
 }
@@ -241,4 +270,25 @@ const utils = {
     ]);
     return [all, input];
   },
+  alertaCambios: (severity = "success", text = "") =>
+    utils.createElement(
+      "div",
+      { className: `alert alert-${severity} px-3 mt-2 pa-aparecer` },
+      [
+        utils.createElement(
+          "div",
+          {
+            className: "flex-1",
+            innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> 
+          </svg>`,
+          },
+          [
+            utils.createElement("label", {
+              innerHTML: text,
+            }),
+          ]
+        ),
+      ]
+    ),
 };
