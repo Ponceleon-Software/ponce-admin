@@ -1,0 +1,5 @@
+# Add 'label1' to any changes within 'example' folder or any subfolders
+javascript: js/**/*
+wordpress: endpoints/**/*
+html: html/**/*
+visual: css/**/*
