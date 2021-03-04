@@ -44,9 +44,8 @@ const cardsControl = async () => {
     contenedor: "pa-container-config",
     buscador: "pa-buscador-config",
   });
-  controlTarjetas.contenedorBuscador = controlTarjetas.contenedor.children[0];
   controlTarjetas.template = () => {
-    const devuelto = [controlTarjetas.contenedorBuscador];
+    const devuelto = [];
     return devuelto.concat(
       controlTarjetas.tarjetas
         .filter((value) =>
