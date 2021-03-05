@@ -155,7 +155,7 @@ Componente.prototype.render = function () {
 
 /**
  *
- * @param {() => Promise<void>} action
+ * @param {() => Promise<Response>} action
  * @param {(success:boolean) => void} onFinish
  */
 function LockeableSwitch(action, onFinish = null) {
@@ -190,10 +190,10 @@ function LockeableSwitch(action, onFinish = null) {
     const response = await this.action();
     this.setState({ locked: false });
     if (this.onFinish) {
-      const success = response === 1;
+      const success = response.ok;
       this.onFinish(success);
       if (!success) {
-        e.preventDefault();
+        this.input.checked = !this.input.checked;
       }
     }
   });

@@ -31,8 +31,8 @@ const createAllCards = (settings) => {
  * Controla la salida de las tarjetas y la manera en que se van a mostrar
  */
 const cardsControl = async () => {
-  const settings = await wpRestApi("settings");
-  console.log(settings);
+  const response = await wpRestApi("settings");
+  const settings = await response.json();
 
   const controlTarjetas = new Modificador();
   controlTarjetas.state = {
