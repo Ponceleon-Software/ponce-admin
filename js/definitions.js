@@ -55,7 +55,11 @@ function TarjetaConfiguracion(
     className: "btn btn-sm text-white bg-gray-600 hover:bg-gray-500",
     innerText: "Ir Ajustes",
   });
-  this.botonAjustes.addEventListener("click", (e) => console.log(this.ajustes));
+  this.botonAjustes.addEventListener("click", (e) => {
+    const event = new Event("changeview");
+    event.view = this.titulo;
+    document.getElementById("pa-views-container").dispatchEvent(event);
+  });
 
   /**
    * Muestra una alerta para indicar al usuario si el request fue
@@ -84,6 +88,11 @@ function TarjetaConfiguracion(
   this.alerta = utils.alertaCambios("success", "Se han guardado los cambios");
   this.alertaEror = utils.alertaCambios("error", "Ha ocurrido un error");
 
+  const tituloMostrado = this.titulo
+    .split(/([A-Z][a-z]*)/)
+    .filter((value) => Boolean(value))
+    .join(" ");
+
   this.tarjeta = utils.createElement(
     "div",
     { className: "card shadow-lg rounded-xl" },
@@ -91,7 +100,7 @@ function TarjetaConfiguracion(
       utils.createElement("div", { className: "card-body p-4" }, [
         utils.createElement("h2", {
           className: "card-title text-base capitalize",
-          innerHTML: this.titulo,
+          innerHTML: tituloMostrado,
         }),
         utils.createElement("div", {
           innerHTML: this.descripcion,
@@ -120,6 +129,40 @@ TarjetaConfiguracion.prototype.addKeyWords = function (keywords) {
 TarjetaConfiguracion.prototype.setSwitch = function (checked) {
   this.switch.setChecked(checked);
 };
+
+function SolucionIndvidual(name, description = "") {
+  this.name = name;
+  this.description = description;
+
+  this.botonVolver = utils.createElement("button", {
+    innerHTML: "Volver",
+    className: "btn btn-primary btn-sm",
+  });
+  this.botonVolver.addEventListener("click", (e) => {
+    const event = new Event("changeview");
+    event.view = "cards";
+    document.getElementById("pa-views-container").dispatchEvent(event);
+  });
+
+  const titulo = this.name
+    .split(/([A-Z][a-z]*)/)
+    .filter((value) => Boolean(value))
+    .join(" ");
+
+  this.container = utils.createElement("div", {}, [
+    utils.createElement("div", { className: "flex" }, [
+      utils.createElement("h3", {
+        innerHTML: titulo,
+        className: "flex-grow text-xl capitalize font-bold",
+      }),
+      this.botonVolver,
+    ]),
+    utils.createElement("p", {
+      innerHTML: this.description,
+      className: "my-4",
+    }),
+  ]);
+}
 
 /**
  * Encapsula funcionalidad compartida entre todoslos componentes

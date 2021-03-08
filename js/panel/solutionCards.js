@@ -1,3 +1,21 @@
+/**
+ * Devuelve un objeto capaz de crear las vistas para las soluciones
+ * @param {any[]} settings
+ */
+const solutions = (settings) => {
+  const solutionsCreator = {
+    settings,
+  };
+
+  solutionsCreator.create = (name) => {
+    const config = settings.find((value) => value.name === name);
+
+    return new SolucionIndvidual(config.name, config.description);
+  };
+
+  return solutionsCreator;
+};
+
 /* Este archivo se volvió innecesario por el momento
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
