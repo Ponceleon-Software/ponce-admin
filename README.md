@@ -1,4 +1,4 @@
-# Ponce Admin [![Multisite Support?](https://img.shields.io/badge/MU-NO-red.svg)](https://shields.io/)
+# Ponce Admin [![Multisite Support?](https://img.shields.io/badge/MU-NO-red.svg)](https://shields.io/) [![Issues](https://img.shields.io/github/issues/ponceleon-software/ponce-admin?logo=Github)](https://shields.io)
 
 
 | Release |  V1.0.0|
