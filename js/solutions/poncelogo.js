@@ -71,7 +71,7 @@ const ponceLogoForm = () => {
   );
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const response = wpRestApiPost("poncelogo", form);
+    const response = await wpRestApiPost("logo", form);
     console.log(await response.json());
   });
   //#endregion submit

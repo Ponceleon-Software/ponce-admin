@@ -39,7 +39,6 @@ async function wpRestApiPost(path, form) {
       credentials: "include",
       body: formData,
     });
-    console.log(await response.json());
     return response;
   } catch (e) {
     alert(e);
