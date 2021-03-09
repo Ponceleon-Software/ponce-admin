@@ -16,6 +16,7 @@ const ponceLogoForm = () => {
     type: "file",
     accept: "image/png,image/jpeg",
     id: "pa-logo-input",
+    name: "image",
   });
   poncelogo.logoInput.addEventListener("change", (e) => {
     console.log(e.target.files[0]);
@@ -32,6 +33,7 @@ const ponceLogoForm = () => {
   //#region inAdmin
   const [labelAdmin, inputAdmin] = utils.createToogle(poncelogo.state.inAdmin);
   poncelogo.inAdminToggle = inputAdmin;
+  poncelogo.inAdminToggle.name = "inAdmin";
   const containerAdmin = utils.createElement(
     "div",
     { className: "flex items-center justify-around" },
@@ -45,6 +47,7 @@ const ponceLogoForm = () => {
   //#region inLogin
   const [labelLogin, inputLogin] = utils.createToogle(poncelogo.state.inLogin);
   poncelogo.inLoginToggle = inputLogin;
+  poncelogo.inLoginToggle.name = "inLogin";
   const containerLogin = utils.createElement(
     "div",
     { className: "flex items-center justify-around" },
@@ -66,10 +69,10 @@ const ponceLogoForm = () => {
     { className: "flex flex-row-reverse" },
     [poncelogo.submit]
   );
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const { file, inAdmin, inLogin } = poncelogo.state;
-    console.log(file, inAdmin, inLogin);
+    const response = wpRestApiPost("poncelogo", form);
+    console.log(await response.json());
   });
   //#endregion submit
 
