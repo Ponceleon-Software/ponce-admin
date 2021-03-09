@@ -9,15 +9,11 @@ add_action( 'rest_api_init', function () {
 function setPonceLogo(WP_REST_request $request){
 
   //Definitions
-  $uploadsFolder = get_the_permalink() . "assets/img/";
+  $uploadsFolder = str_replace("\\endpoints", "/assets/img/", __DIR__ );
 
   $file = $request->get_file_params()["image"];
   $fileTmpPath = $file['tmp_name'];
   $fileName = $file['name'];
-  $fileSize = $file['size'];
-  $fileType = $file['type'];
-  $fileNameCmps = explode(".", $fileName);
-  $fileExtension = strtolower(end($fileNameCmps));
 
   $dest_path = $uploadsFolder . $fileName;
   if(move_uploaded_file($fileTmpPath, $dest_path)){
