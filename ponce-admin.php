@@ -11,6 +11,7 @@
 defined('ABSPATH') or die("Bye bye");
 include 'solutions/topbar.php';
 include 'endpoints/topbar.php';
+include 'endpoints/poncelogo.php';
 include 'initialize.php';
 
 add_action( 'rest_api_init', function () {
