@@ -130,7 +130,12 @@ TarjetaConfiguracion.prototype.setSwitch = function (checked) {
   this.switch.setChecked(checked);
 };
 
-function SolucionIndvidual(name, description = "") {
+/**
+ * Define un objeto que crea la vista individual de una solución
+ * @param {string} name Nombre de la solución
+ * @param {string} description Descripción de la solución
+ */
+function SolucionIndvidual(name, description = "", form = null) {
   this.name = name;
   this.description = description;
 
@@ -143,6 +148,8 @@ function SolucionIndvidual(name, description = "") {
     event.view = "cards";
     document.getElementById("pa-views-container").dispatchEvent(event);
   });
+
+  this.form = form ? form.elementoPadre : utils.createElement("div");
 
   const titulo = this.name
     .split(/([A-Z][a-z]*)/)
@@ -161,16 +168,17 @@ function SolucionIndvidual(name, description = "") {
       innerHTML: this.description,
       className: "my-4",
     }),
+    this.form,
   ]);
 }
 
 /**
- * Encapsula funcionalidad compartida entre todoslos componentes
+ * Encapsula funcionalidad compartida entre todos los componentes
  * reactivos
  * @param {Node} elemento
  * @param {() => Node[]} template
  */
-function Componente(elemento = null, template = null) {
+function Componente(elemento = null, template = () => []) {
   this.elementoPadre = elemento;
   this.template = template;
 }
@@ -259,6 +267,30 @@ LockeableSwitch.prototype.setChecked = function (checked) {
   this.input.checked = checked;
 };
 
+/*function LabeledInputFile(accept = "image/*", id = "pa-file-input") {
+  this.state = {
+    value: "",
+  };
+
+  this.input = utils.createElement(
+    "input",
+    { className: "hidden", type: "file", accept, id },
+    []
+  );
+  this.input.addEventListener("change", (e) => {
+    this.setState({ value: e.target.value });
+  });
+
+  this.label = utils.createElement("label", {
+    htmlFor: id,
+    className: "btn btn-circle btn-primary",
+    innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="30px" height="30px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
+  });
+
+  this.elementoPadre = utils.createElement("div", {}, [this.label, this.input]);
+}
+LabeledInputFile.prototype = Object.create(Componente.prototype);*/
+
 const utils = {
   createModificador: (state = {}, ids = {}) => {
     const modificador = new Modificador(state);
@@ -334,4 +366,25 @@ const utils = {
         ),
       ]
     ),
+  /**
+   * Función que crea un boton redondo como label para un input de tipo file
+   * @param {Node} input El input de tipo file al que hace referencia el label
+   * @param {any} attributes algunos atributos para modificar el label
+   * @returns {Node}
+   */
+  labelInputFile: (input, attributes) => {
+    input.className += " hidden";
+    return utils.createElement("div", { className: "flex justify-center" }, [
+      utils.createElement(
+        "label",
+        {
+          ...attributes,
+          htmlFor: input.id,
+          className: "btn btn-circle btn-primary",
+          innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="30px" height="30px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
+        },
+        [input]
+      ),
+    ]);
+  },
 };
