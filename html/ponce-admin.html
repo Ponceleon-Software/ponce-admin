@@ -17,7 +17,10 @@
     <link rel="stylesheet" href="../style/ponce-admin.css" />
     <script src="../js/solutions/baseCalls.js"></script>
     <script src="../js/definitions.js"></script>
+    <script src="../js/solutions/poncelogo.js"></script>
+    <script src="../js/panel/solutionCards.js"></script>
     <script src="../js/panel/cardsControl.js"></script>
+    <script src="../js/panel/views.js"></script>
     <script src="../js/panel/panel.js"></script>
   </head>
   <body>
@@ -73,10 +76,12 @@
             </svg>
           </button>
         </div>
-        <div
-          class="grid grid-cols-2 xl:grid-cols-3 gap-4"
-          id="pa-container-config"
-        ></div>
+        <div id="pa-views-container">
+          <div
+            class="grid grid-cols-2 xl:grid-cols-3 gap-4"
+            id="pa-container-config"
+          ></div>
+        </div>
       </div>
     </div>
   </body>

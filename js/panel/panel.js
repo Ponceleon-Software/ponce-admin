@@ -51,7 +51,7 @@ const controlPanel = () => {
 window.addEventListener("DOMContentLoaded", (e) => {
   controlPanel();
 
-  cardsControl();
+  viewsControl();
 });
 
 /*const labeledInputFile = (input, attributes) => {
