@@ -21,7 +21,7 @@ function setPonceLogo(WP_REST_request $request){
 	));
   $arr = json_decode($prevOptions, true);
   if($arr['src']){
-    unlink($arr['src']);
+    unlink($uploadsFolder . $arr['src']);
   }
   #endregion
 
@@ -32,10 +32,13 @@ function setPonceLogo(WP_REST_request $request){
   if(isset($file) && is_uploaded_file($file['tmp_name'])){
     $fileTmpPath = $file['tmp_name'];
     $fileName = $file['name'];
+    if(file_exists($uploadsFolder . $fileName)){
+      $fileName = $fileName . rand( 1000, 9999 );
+    }
 
     $dest_path = $uploadsFolder . $fileName;
     if(move_uploaded_file($fileTmpPath, $dest_path)){
-      $src = $dest_path;
+      $src = $fileName;
     }else{
       return false;
     }
