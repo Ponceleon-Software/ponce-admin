@@ -13,6 +13,7 @@ include 'initialize.php';
 include 'endpoints/activate.php';
 include 'endpoints/poncelogo.php';
 include 'solutions/topbar.php';
+include 'solutions/poncelogo.php';
 
 add_action( 'rest_api_init', function () {
   register_rest_route( 'ponceadmin/v2', 'settings', array(
