@@ -30,13 +30,13 @@ function ponce_install_data() {
 	$sql = '';
  	foreach($todb as $g) {
 		$keywordstoarr=implode("','", $g['keywords']);
-	    if($sql != '') $sql.= ',';
-	    if(!is_array($g['options'])){
-	    	$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $g['options'] .'", "'. $keywordstoarr .'")';
-	    }
+    if($sql != '') $sql.= ',';
+	  if(!is_array($g['options'])){
+			$sql .= $wpdb->prepare('(%s, %s, %d, %s, %s)', $g['name'], $g['description'], $g['is_active'], $g["options"], $keywordstoarr);
+	  }
 		else{
-			$optionstoarr= str_replace('=', ':', http_build_query( $g['options'], null, ','));
-			$sql .= '("'. $g['name'] .'", "'. $g['description'].'", "'. $g['is_active'].'", "'. $optionstoarr .'", "'. $keywordstoarr .'")';
+			$optionstoarr= json_encode( $g['options'] );
+			$sql .= $wpdb->prepare('(%s, %s, %d, %s, %s)', $g['name'], $g['description'], $g['is_active'], $optionstoarr, $keywordstoarr);
 		}
 	}
 	if($sql != '') {

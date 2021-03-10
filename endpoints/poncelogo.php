@@ -19,15 +19,9 @@ function setPonceLogo(WP_REST_request $request){
   $prevOptions = $wpdb->get_var( $wpdb->prepare(
     "SELECT options FROM $table_name WHERE name = '$name'"
 	));
-  $arr = explode(",", $prevOptions);
-  $prevSrc = "";
-  foreach ($arr as $val) {
-    if(substr($val, 0, 4) == "src:"){
-      $prevSrc = substr($val, 4);
-    }
-  }
-  if($prevSrc!=""){
-    unlink($prevSrc);
+  $arr = json_decode($prevOptions, true);
+  if($arr['src']){
+    unlink($arr['src']);
   }
   #endregion
 
@@ -46,9 +40,14 @@ function setPonceLogo(WP_REST_request $request){
       return false;
     }
   }
+  $options = array(
+    "src" => $src,
+    "inAdmin" => $inAdmin,
+    "inLogin" => $inLogin
+  );
   $result = $wpdb->update(
     $table_name,
-    array('options' => "src:$src,inAdmin:$inAdmin,inLogin:$inLogin"),
+    array('options' => json_encode($options)),
     array( 'name' => $name )
   );
   if($result>0){

@@ -29,18 +29,18 @@ function getSettings(){
 	
     foreach ( $row as $row ) 
     { 
-		$asArr = explode( ',', $row->options );
-		$finalArray = array();
+		$asArr = json_decode( $row->options );
+		/*$finalArray = array();
 		foreach( $asArr as $val ){
 		  $tmp = explode( ':', $val );
 		  $finalArray[ $tmp[0] ] = $tmp[1];
-		}
+		}*/
 		
     	$a=array(
     		'name'=>$row->name,
     		'description'=>$row->description,
     		'is_active'=>$row->is_active,
-    		'options'=>json_encode($finalArray),
+    		'options'=>$asArr,
     		'keywords'=>explode(',',$row->keywords),
     	);
     	array_push($setttings_array, $a);
