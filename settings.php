@@ -14,9 +14,9 @@ $properties = array(
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Cras vulputate consequat ',
             'is_active'=>false,
             'options' =>array(		
-    		"src" =>'false',
-    		"inAdmin" =>'false',
-    		"inLogin" =>'false',
+    		"src" => "",
+    		"inAdmin" => false,
+    		"inLogin" => false,
     		),
             'keywords'=>array("logo", "imagen", "image")
            
