@@ -9,9 +9,10 @@
  */
 //Endpoint settings//
 defined('ABSPATH') or die("Bye bye");
-include 'solutions/topbar.php';
-include 'endpoints/topbar.php';
 include 'initialize.php';
+include 'endpoints/activate.php';
+include 'endpoints/poncelogo.php';
+include 'solutions/topbar.php';
 
 add_action( 'rest_api_init', function () {
   register_rest_route( 'ponceadmin/v2', 'settings', array(
