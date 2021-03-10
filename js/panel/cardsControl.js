@@ -9,7 +9,7 @@ const createAllCards = (settings) => {
     const name = value.name;
     const descripcion = value.description;
     const isActive = value.is_active === "1";
-    const dbaction = async () => await wpRestApi(name);
+    const dbaction = async () => await wpRestApi(`activate/${name}`);
 
     const tarjeta = new TarjetaConfiguracion(name, descripcion, dbaction);
     tarjeta.setSwitch(isActive);
