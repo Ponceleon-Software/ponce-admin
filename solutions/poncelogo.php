@@ -16,8 +16,7 @@ function logo_en_admin_menu() {
   $options = json_decode($options, true);
 
   if($options['inAdmin'] && $options['src']){
-    $uploadsFolder = plugins_url( '/assets/img', __DIR__ );
-    $src = $uploadsFolder . "/" . $options['src'];
+    $src = $options['src'];
 
     //Añado una constante al js que guarde la ruta de la imagen
     ?>
