@@ -5,25 +5,50 @@ const ponceLogoForm = () => {
 
   const poncelogo = new Componente(form);
   poncelogo.state = {
-    preview: "",
-    file: "",
+    src: "",
     inAdmin: false,
     inLogin: false,
   };
 
   //#region inputLogo
   poncelogo.logoInput = utils.createElement("input", {
-    type: "file",
-    accept: "image/png,image/jpeg",
+    type: "button",
     id: "pa-logo-input",
-    name: "image",
   });
-  poncelogo.logoInput.addEventListener("change", (e) => {
-    console.log(e.target.files[0]);
-    poncelogo.setState({
-      file: e.target.files[0],
-      preview: URL.createObjectURL(e.target.files[0]),
+  poncelogo.srcInput = utils.createElement("input", {
+    type: "text",
+    name: "src",
+    className: "hidden",
+  });
+  let mediaUploader;
+  poncelogo.logoInput.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (mediaUploader) {
+      mediaUploader.open();
+      return;
+    }
+
+    if (window.parent) {
+      mediaUploader = window.parent.wp.media({
+        title: "Choose Image",
+        button: {
+          text: "Choose Image",
+        },
+        multiple: false,
+      });
+    }
+
+    // When a file is selected, grab the URL and set it as the text field's value
+    mediaUploader.on("select", function () {
+      let attachment = mediaUploader.state().get("selection").first().toJSON();
+      poncelogo.setState({
+        src: attachment.url,
+      });
     });
+
+    // Open the uploader dialog
+    mediaUploader.open();
   });
   const labelLI = utils.labelInputFile(poncelogo.logoInput, {
     title: "Subir logo",
@@ -78,16 +103,18 @@ const ponceLogoForm = () => {
 
   poncelogo.template = () => {
     const temp = [labelLI];
-    if (poncelogo.state.preview) {
+    if (poncelogo.state.src) {
+      poncelogo.srcInput.value = poncelogo.state.src;
       temp.push(
         utils.createElement("div", { className: "relative w-max mx-auto" }, [
           utils.createElement("img", {
-            src: poncelogo.state.preview,
+            src: poncelogo.state.src,
             alt: "logo",
           }),
         ]),
         containerAdmin,
-        containerLogin
+        containerLogin,
+        poncelogo.srcInput
       );
     }
     temp.push(containerSubmit);
