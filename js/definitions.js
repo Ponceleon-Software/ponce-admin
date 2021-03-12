@@ -61,32 +61,7 @@ function TarjetaConfiguracion(
     document.getElementById("pa-views-container").dispatchEvent(event);
   });
 
-  /**
-   * Muestra una alerta para indicar al usuario si el request fue
-   * exitoso o no
-   * @param {boolean} success Indica si el request fue exitoso
-   */
-  const showAlert = (success) => {
-    const body = this.tarjeta.firstChild;
-
-    const show = (alerta) => {
-      body.appendChild(alerta);
-      setTimeout(() => {
-        body.removeChild(alerta);
-      }, 2000);
-    };
-
-    if (success) {
-      show(this.alerta);
-    } else {
-      show(this.alertaEror);
-    }
-  };
-
-  this.switch = new LockeableSwitch(this.dbaction, showAlert);
-
-  this.alerta = utils.alertaCambios("success", "Se han guardado los cambios");
-  this.alertaEror = utils.alertaCambios("error", "Ha ocurrido un error");
+  this.switch = new LockeableSwitch(this.dbaction);
 
   const tituloMostrado = this.titulo
     .split(/([A-Z][a-z]*)/)
@@ -114,6 +89,8 @@ function TarjetaConfiguracion(
       ]),
     ]
   );
+
+  this.switch.onFinish = utils.initAlerts(this.tarjeta.firstChild);
 }
 /**
  * Añade a la tarjeta palabras clave para ayudar al buscador
@@ -140,8 +117,9 @@ function SolucionIndvidual(name, description = "", form = null) {
   this.description = description;
 
   this.botonVolver = utils.createElement("button", {
-    innerHTML: "Volver",
-    className: "btn btn-primary btn-sm",
+    innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>`,
+    className: "btn btn-sm btn-circle",
+    title: "Volver",
   });
   this.botonVolver.addEventListener("click", (e) => {
     const event = new Event("changeview");
@@ -158,11 +136,11 @@ function SolucionIndvidual(name, description = "", form = null) {
 
   this.container = utils.createElement("div", {}, [
     utils.createElement("div", { className: "flex" }, [
+      this.botonVolver,
       utils.createElement("h3", {
         innerHTML: titulo,
-        className: "flex-grow text-xl capitalize font-bold",
+        className: "text-xl capitalize font-bold",
       }),
-      this.botonVolver,
     ]),
     utils.createElement("p", {
       innerHTML: this.description,
@@ -367,6 +345,29 @@ const utils = {
       ]
     ),
   /**
+   * Función que inicializa las alertas exito/error en un contenedor
+   * @param {Node} container El contenedor en el que se van a colocar las alertas
+   * @param {Node} alertaError Alerta de error, si no se le añade un valor se crea una por default
+   * @param {Node} alertaSuccess Alerta de exito, si no se le añade un valor se crea uno por default
+   * @returns {(success: boolean) => void} Una función que muestra la alerta.
+   * @param success Parametro que indica si la operación fue exitosa. true para la alerta de exito y false para la de error
+   */
+  initAlerts: (container, alertaError = null, alertaSuccess = null) => {
+    const alertaE =
+      alertaError || utils.alertaCambios("error", "Ha ocurrido un error");
+    const alertaS =
+      alertaSuccess ||
+      utils.alertaCambios("success", "Se han guardado los cambios");
+    const show = (success) => {
+      const alerta = success ? alertaS : alertaE;
+      container.appendChild(alerta);
+      setTimeout(() => {
+        container.removeChild(alerta);
+      }, 2000);
+    };
+    return show;
+  },
+  /**
    * Función que crea un boton redondo como label para un input de tipo file
    * @param {Node} input El input de tipo file al que hace referencia el label
    * @param {any} attributes algunos atributos para modificar el label
@@ -374,7 +375,7 @@ const utils = {
    */
   labelInputFile: (input, attributes) => {
     input.className += " hidden";
-    return utils.createElement("div", { className: "flex justify-center" }, [
+    return utils.createElement("div", { className: "flex" }, [
       utils.createElement(
         "label",
         {

@@ -39,7 +39,7 @@ const viewsControl = async () => {
       controlador.container.appendChild(getView(state.view).container);
       controlador.container.className = classes;
       controlador.cambiando = false;
-    }, 150);
+    }, 300);
   };
 
   controlador.container.addEventListener("changeview", (e) => {

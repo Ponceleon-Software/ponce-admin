@@ -1,6 +1,6 @@
 const ponceLogoForm = () => {
   const form = utils.createElement("form", {
-    className: "grid grid-cols-1 gap-2 max-w-xs mx-auto",
+    className: "grid grid-cols-1 gap-2",
   });
 
   const poncelogo = new Componente(form);
@@ -31,9 +31,12 @@ const ponceLogoForm = () => {
 
     if (window.parent) {
       mediaUploader = window.parent.wp.media({
-        title: "Choose Image",
+        title: "Elegir Imagen",
         button: {
-          text: "Choose Image",
+          text: "Elegir Imagen",
+        },
+        library: {
+          type: ["image"],
         },
         multiple: false,
       });
@@ -53,6 +56,7 @@ const ponceLogoForm = () => {
   const labelLI = utils.labelInputFile(poncelogo.logoInput, {
     title: "Subir logo",
   });
+  labelLI.className += " max-w-xs";
   //#endregion inputLogo
 
   //#region inAdmin
@@ -61,7 +65,7 @@ const ponceLogoForm = () => {
   poncelogo.inAdminToggle.name = "inAdmin";
   const containerAdmin = utils.createElement(
     "div",
-    { className: "flex items-center justify-around" },
+    { className: "flex items-center justify-between" },
     [utils.createElement("span", { innerHTML: "Mostrar en Admin" }), labelAdmin]
   );
   poncelogo.inAdminToggle.addEventListener("click", (e) => {
@@ -75,7 +79,7 @@ const ponceLogoForm = () => {
   poncelogo.inLoginToggle.name = "inLogin";
   const containerLogin = utils.createElement(
     "div",
-    { className: "flex items-center justify-around" },
+    { className: "flex items-center justify-between" },
     [utils.createElement("span", { innerHTML: "Mostrar en Login" }), labelLogin]
   );
   poncelogo.inLoginToggle.addEventListener("click", (e) => {
@@ -83,41 +87,77 @@ const ponceLogoForm = () => {
   });
   //#endregion inLogin
 
+  const contenedorSwitchs = utils.createElement("div", { className: "w-max" }, [
+    containerAdmin,
+    containerLogin,
+  ]);
+
+  const contenedorAlert = utils.createElement("div");
+
   //#region submit
-  poncelogo.submit = utils.createElement("input", {
+  const loadCircle = utils.createElement("span", {
+    className:
+      "w-4 h-4 ml-2 rounded-full border-2 border-gray-200 animate-spin",
+    style: "border-top-color: gray",
+  });
+  const showAlerts = utils.initAlerts(contenedorAlert);
+
+  poncelogo.submit = utils.createElement("button", {
     type: "submit",
-    value: "Guardar",
     className: "btn btn-sm text-white bg-gray-600 hover:bg-gray-500",
+    innerHTML: "Guardar",
   });
   const containerSubmit = utils.createElement(
     "div",
     { className: "flex flex-row-reverse" },
     [poncelogo.submit]
   );
+  let guardando = false;
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (guardando) return;
+    guardando = true;
+    poncelogo.submit.appendChild(loadCircle);
     const response = await wpRestApiPost("logo", form);
-    console.log(await response.json());
+    showAlerts(response.ok);
+    poncelogo.submit.removeChild(loadCircle);
+    guardando = false;
   });
-  //#endregion submit
+  //#endregion
+
+  //#region preview imagen
+  const botonCancel = utils.createElement("button", {
+    className: "btn btn-error btn-circle btn-xs absolute right-2 top-2",
+    innerHTML: "x",
+  });
+  const previewImg = utils.createElement(
+    "div",
+    { className: "relative w-max" },
+    [
+      utils.createElement("img", {
+        src: poncelogo.state.src,
+        alt: "logo",
+        width: "250",
+        height: "250",
+      }),
+      botonCancel,
+    ]
+  );
+  botonCancel.addEventListener("click", (e) => {
+    poncelogo.setState({ src: "", inAdmin: false, inLogin: false });
+  });
+  //#endregion
 
   poncelogo.template = () => {
     const temp = [labelLI];
+    poncelogo.srcInput.value = poncelogo.state.src;
+    previewImg.firstChild.src = poncelogo.state.src;
+    poncelogo.inAdminToggle.checked = poncelogo.state.inAdmin;
+    poncelogo.inLoginToggle.checked = poncelogo.state.inLogin;
     if (poncelogo.state.src) {
-      poncelogo.srcInput.value = poncelogo.state.src;
-      temp.push(
-        utils.createElement("div", { className: "relative w-max mx-auto" }, [
-          utils.createElement("img", {
-            src: poncelogo.state.src,
-            alt: "logo",
-          }),
-        ]),
-        containerAdmin,
-        containerLogin,
-        poncelogo.srcInput
-      );
+      temp.push(previewImg, contenedorSwitchs, poncelogo.srcInput);
     }
-    temp.push(containerSubmit);
+    temp.push(contenedorAlert, containerSubmit);
     return temp;
   };
 
