@@ -15,7 +15,7 @@ const solutions = (settings) => {
     const config = settings.find((value) => value.name === name);
 
     if (!solutionsCreator[name] && formsSolutions[name]) {
-      solutionsCreator[name] = formsSolutions[name]();
+      solutionsCreator[name] = formsSolutions[name](config.options);
     }
 
     return new SolucionIndvidual(
