@@ -1,14 +1,10 @@
-const ponceLogoForm = () => {
+const ponceLogoForm = (options = {}) => {
   const form = utils.createElement("form", {
     className: "grid grid-cols-1 gap-2",
   });
 
   const poncelogo = new Componente(form);
-  poncelogo.state = {
-    src: "",
-    inAdmin: false,
-    inLogin: false,
-  };
+  poncelogo.state = options;
 
   //#region inputLogo
   poncelogo.logoInput = utils.createElement("input", {
