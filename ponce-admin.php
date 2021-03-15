@@ -24,30 +24,14 @@ add_action( 'rest_api_init', function () {
 
 function getSettings(){
     
-    global $wpdb;
-    $setttings_array=[];
-	$row = $wpdb->get_results( "SELECT * FROM wp_ponce");
+  global $wpdb;
+	$rows = $wpdb->get_results( "SELECT * FROM wp_ponce" );
 	
-    foreach ( $row as $row ) 
-    { 
-		$asArr = json_decode( $row->options );
-		/*$finalArray = array();
-		foreach( $asArr as $val ){
-		  $tmp = explode( ':', $val );
-		  $finalArray[ $tmp[0] ] = $tmp[1];
-		}*/
-		
-    	$a=array(
-    		'name'=>$row->name,
-    		'description'=>$row->description,
-    		'is_active'=>$row->is_active,
-    		'options'=>$asArr,
-    		'keywords'=>explode(',',$row->keywords),
-    	);
-    	array_push($setttings_array, $a);
-    	
+  foreach ( $rows as $row )
+  {
+		$row->options = json_decode( $row->options );	
 	}
-	return ($setttings_array);
+	return ($rows);
   
 }
 
