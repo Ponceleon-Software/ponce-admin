@@ -9,9 +9,11 @@
  */
 //Endpoint settings//
 defined('ABSPATH') or die("Bye bye");
-include 'solutions/topbar.php';
-include 'endpoints/topbar.php';
 include 'initialize.php';
+include 'endpoints/activate.php';
+include 'endpoints/poncelogo.php';
+include 'solutions/topbar.php';
+include 'solutions/poncelogo.php';
 
 add_action( 'rest_api_init', function () {
   register_rest_route( 'ponceadmin/v2', 'settings', array(
@@ -22,37 +24,25 @@ add_action( 'rest_api_init', function () {
 
 function getSettings(){
     
-    global $wpdb;
-    $setttings_array=[];
-	$row = $wpdb->get_results( "SELECT * FROM wp_ponce");
+  global $wpdb;
+	$rows = $wpdb->get_results( "SELECT * FROM wp_ponce" );
 	
-    foreach ( $row as $row ) 
-    { 
-		$asArr = explode( ',', $row->options );
-		$finalArray = array();
-		foreach( $asArr as $val ){
-		  $tmp = explode( ':', $val );
-		  $finalArray[ $tmp[0] ] = $tmp[1];
-		}
-		
-    	$a=array(
-    		'name'=>$row->name,
-    		'description'=>$row->description,
-    		'is_active'=>$row->is_active,
-    		'options'=>json_encode($finalArray),
-    		'keywords'=>explode(',',$row->keywords),
-    	);
-    	array_push($setttings_array, $a);
-    	
+  foreach ( $rows as $row )
+  {
+		$row->options = json_decode( $row->options );	
 	}
-	return ($setttings_array);
+	return ($rows);
   
 }
 
 //enqueues
+add_action("admin_enqueue_scripts", "dcms_insert_script_upload");
 
-wp_enqueue_style('frame-css','/wp-content/plugins/Ponce-admin/style/frame.css');
-wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/js/main.js', array(), null, true );    
+function dcms_insert_script_upload(){
+	wp_enqueue_media();
+  wp_enqueue_script( 'main', '/wp-content/plugins/Ponce-admin/js/main.js', array(), null, true );
+	wp_enqueue_style('frame-css','/wp-content/plugins/Ponce-admin/style/frame.css');
+}
 register_activation_hook( __FILE__, 'ponce_install' );
 register_activation_hook( __FILE__, 'ponce_install_data' );
 ?>

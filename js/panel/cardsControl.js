@@ -1,7 +1,3 @@
-const cardsEndpoints = {
-  ponceTopBar: "topbar",
-};
-
 /**
  * Toma el arreglo de configuraciones de la base de datos y devuelve
  * las tarjetas correspondientes
@@ -10,15 +6,10 @@ const cardsEndpoints = {
  */
 const createAllCards = (settings) => {
   return settings.map((value) => {
-    const name = value.name
-      .split(/([A-Z][a-z]*)/)
-      .filter((value) => Boolean(value))
-      .join(" ");
+    const name = value.name;
     const descripcion = value.description;
     const isActive = value.is_active === "1";
-    const dbaction = cardsEndpoints[value.name]
-      ? async () => await wpRestApi(cardsEndpoints[value.name])
-      : () => {};
+    const dbaction = async () => await wpRestApi(`activate/${name}`);
 
     const tarjeta = new TarjetaConfiguracion(name, descripcion, dbaction);
     tarjeta.setSwitch(isActive);
@@ -30,17 +21,14 @@ const createAllCards = (settings) => {
 /**
  * Controla la salida de las tarjetas y la manera en que se van a mostrar
  */
-const cardsControl = async () => {
-  const settings = await wpRestApi("settings");
-  console.log(settings);
-
+const cardsControl = (settings) => {
   const controlTarjetas = new Modificador();
   controlTarjetas.state = {
     buscador: "",
   };
   controlTarjetas.tarjetas = createAllCards(settings);
   controlTarjetas.addElements({
-    contenedor: "pa-container-config",
+    container: "pa-container-config",
     buscador: "pa-buscador-config",
   });
   controlTarjetas.template = () => {
@@ -59,19 +47,19 @@ const cardsControl = async () => {
   };
   controlTarjetas.render = () => {
     const template = controlTarjetas.template();
-    const actual = controlTarjetas.contenedor.children;
+    const actual = controlTarjetas.container.children;
 
     template.forEach((value, index) => {
       if (actual[index] && value !== actual[index]) {
-        controlTarjetas.contenedor.replaceChild(value, actual[index]);
+        controlTarjetas.container.replaceChild(value, actual[index]);
       } else if (!actual[index]) {
-        controlTarjetas.contenedor.appendChild(value);
+        controlTarjetas.container.appendChild(value);
       }
     });
 
     if (actual.length > template.length) {
       for (let i = template.length; i < actual.length; i++) {
-        controlTarjetas.contenedor.removeChild(actual[i]);
+        controlTarjetas.container.removeChild(actual[i]);
       }
     }
     controlTarjetas.buscador.focus();
@@ -82,4 +70,6 @@ const cardsControl = async () => {
   });
 
   controlTarjetas.render();
+
+  return controlTarjetas;
 };

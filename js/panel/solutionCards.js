@@ -1,3 +1,33 @@
+const formsSolutions = {
+  ponceLogo: ponceLogoForm,
+};
+
+/**
+ * Devuelve un objeto capaz de crear las vistas para las soluciones
+ * @param {any[]} settings
+ */
+const solutions = (settings) => {
+  const solutionsCreator = {
+    settings,
+  };
+
+  solutionsCreator.create = (name) => {
+    const config = settings.find((value) => value.name === name);
+
+    if (!solutionsCreator[name] && formsSolutions[name]) {
+      solutionsCreator[name] = formsSolutions[name](config.options);
+    }
+
+    return new SolucionIndvidual(
+      config.name,
+      config.description,
+      solutionsCreator[name]
+    );
+  };
+
+  return solutionsCreator;
+};
+
 /* Este archivo se volvió innecesario por el momento
 const tarjetaLogo = () => {
   const tarjetaLogo = new TarjetaConfiguracion(
