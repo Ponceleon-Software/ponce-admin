@@ -22,11 +22,29 @@ const controlPanel = () => {
   const classesCubierta = modPanel.cubierta.className;
   const imgBoton = modPanel.botonAbrir.innerHTML;
 
+  let prevStyle = null;
+
   //Creo y ejecuto por primera vez la función render que se encarga
   //de modificar las clases css del elemento según el state
   modPanel.render = () => {
     modPanel.lateral.className =
       classesL + (modPanel.state.lateralOpen ? " right-0" : " -right-3/4");
+
+    if (!modPanel.state.lateralOpen) {
+      prevStyle = {
+        transition: modPanel.lateral.style.transition,
+        width: modPanel.lateral.style.width,
+      };
+      modPanel.lateral.style = null;
+      modPanel.contenedorBoton.style = null;
+    } else {
+      modPanel.lateral.style.width = modPanel.contenedorBoton.style.right =
+        prevStyle.width;
+      setTimeout(() => {
+        modPanel.lateral.style.transition = prevStyle.transition;
+        modPanel.lateral.dispatchEvent(new Event("resize"));
+      }, 500);
+    }
 
     modPanel.contenedorBoton.className =
       classesBoton +
@@ -46,6 +64,69 @@ const controlPanel = () => {
   };
   modPanel.botonAbrir.addEventListener("click", setLateralOpen);
   modPanel.cubierta.addEventListener("click", setLateralOpen);
+
+  initResize();
+};
+
+/**
+ * Contiene los event listener necesarios para el correcto resizing
+ * del panel
+ */
+const initResize = () => {
+  const panel = document.getElementById("pa-lateral-deslizable");
+  const draggableBorder = document.getElementById("pa-resizer");
+  const gridCards = document.getElementById("pa-container-config");
+
+  const botonAbrir = document.getElementById("pa-contenedor-boton-fixed");
+
+  /**
+   * Función que engancha el ancho del panel al mouse
+   * @param {MouseEvent} e El evento del mouse
+   */
+  const move = (e) => {
+    if (e.screenX < 50 || window.innerWidth - e.screenX < 280) return;
+
+    botonAbrir.style.right = panel.style.width = `calc( 100% - ${e.screenX}px )`;
+    panel.dispatchEvent(new Event("resize"));
+  };
+
+  const onMouseOut = (e) => {
+    botonAbrir.style.transition = panel.style.transition = "none";
+    panel.className += " pa-resize-border";
+    window.addEventListener("mousemove", move);
+  };
+
+  const onMouseDown = (e) => {
+    e.preventDefault();
+    draggableBorder.addEventListener("mouseout", onMouseOut);
+  };
+
+  draggableBorder.addEventListener("mousedown", onMouseDown);
+
+  window.addEventListener("mouseup", (e) => {
+    window.removeEventListener("mousemove", move);
+    draggableBorder.removeEventListener("mouseout", onMouseOut);
+    let index = panel.className.indexOf(" pa-resize-border");
+    if (index > 0) panel.className = panel.className.substring(0, index);
+  });
+
+  window.addEventListener("resize", (e) => {
+    if (
+      panel.offsetWidth < 280 &&
+      window.innerWidth == window.parent.innerWidth
+    ) {
+      panel.style.width = botonAbrir.style.right = "280px";
+    }
+    panel.dispatchEvent(new Event("resize"));
+  });
+
+  const ajustarTamannoGrid = () => {
+    gridCards.className = `grid gap-4 grid-cols-${Math.floor(
+      panel.offsetWidth / 260
+    )}`;
+  };
+
+  panel.addEventListener("resize", ajustarTamannoGrid);
 };
 
 window.addEventListener("DOMContentLoaded", (e) => {
