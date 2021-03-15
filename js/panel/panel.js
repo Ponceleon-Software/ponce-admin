@@ -36,8 +36,10 @@ const controlPanel = () => {
         width: modPanel.lateral.style.width,
       };
       modPanel.lateral.style = null;
+      modPanel.contenedorBoton.style = null;
     } else {
-      modPanel.lateral.style.width = prevStyle.width;
+      modPanel.lateral.style.width = modPanel.contenedorBoton.style.right =
+        prevStyle.width;
       setTimeout(() => {
         modPanel.lateral.style.transition = prevStyle.transition;
       }, 500);
@@ -65,28 +67,42 @@ const controlPanel = () => {
   initResize();
 };
 
+/**
+ * Contiene los event listener necesarios para el correcto resizing
+ * del panel
+ */
 const initResize = () => {
   const panel = document.getElementById("pa-lateral-deslizable");
   const draggableBorder = document.getElementById("pa-resizer");
+  const gridCards = document.getElementById("pa-container-config");
 
   const botonAbrir = document.getElementById("pa-contenedor-boton-fixed");
+
+  const ajustarTamannoGrid = () => {
+    gridCards.className = `grid gap-4 grid-cols-${Math.floor(
+      panel.offsetWidth / 260
+    )}`;
+  };
 
   /**
    * Función que engancha el ancho del panel al mouse
    * @param {MouseEvent} e El evento del mouse
    */
   const move = (e) => {
-    botonAbrir.style.right = panel.style.width = `${
-      window.innerWidth - e.screenX
-    }px`;
+    if (e.screenX < 50 || window.innerWidth - e.screenX < 280) return;
+
+    botonAbrir.style.right = panel.style.width = `calc( 100% - ${e.screenX}px )`;
+    ajustarTamannoGrid();
   };
 
   const onMouseOut = (e) => {
     botonAbrir.style.transition = panel.style.transition = "none";
+    panel.className += " pa-resize-border";
     window.addEventListener("mousemove", move);
   };
 
   const onMouseDown = (e) => {
+    e.preventDefault();
     draggableBorder.addEventListener("mouseout", onMouseOut);
   };
 
@@ -95,6 +111,15 @@ const initResize = () => {
   window.addEventListener("mouseup", (e) => {
     window.removeEventListener("mousemove", move);
     draggableBorder.removeEventListener("mouseout", onMouseOut);
+    let index = panel.className.indexOf(" pa-resize-border");
+    if (index > 0) panel.className = panel.className.substring(0, index);
+  });
+
+  window.addEventListener("resize", (e) => {
+    if (panel.offsetWidth < 280) {
+      panel.style.width = botonAbrir.style.right = "280px";
+    }
+    ajustarTamannoGrid();
   });
 };
 
