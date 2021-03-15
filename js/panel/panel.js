@@ -42,6 +42,7 @@ const controlPanel = () => {
         prevStyle.width;
       setTimeout(() => {
         modPanel.lateral.style.transition = prevStyle.transition;
+        modPanel.lateral.dispatchEvent(new Event("resize"));
       }, 500);
     }
 
@@ -78,12 +79,6 @@ const initResize = () => {
 
   const botonAbrir = document.getElementById("pa-contenedor-boton-fixed");
 
-  const ajustarTamannoGrid = () => {
-    gridCards.className = `grid gap-4 grid-cols-${Math.floor(
-      panel.offsetWidth / 260
-    )}`;
-  };
-
   /**
    * Función que engancha el ancho del panel al mouse
    * @param {MouseEvent} e El evento del mouse
@@ -92,7 +87,7 @@ const initResize = () => {
     if (e.screenX < 50 || window.innerWidth - e.screenX < 280) return;
 
     botonAbrir.style.right = panel.style.width = `calc( 100% - ${e.screenX}px )`;
-    ajustarTamannoGrid();
+    panel.dispatchEvent(new Event("resize"));
   };
 
   const onMouseOut = (e) => {
@@ -122,8 +117,16 @@ const initResize = () => {
     ) {
       panel.style.width = botonAbrir.style.right = "280px";
     }
-    ajustarTamannoGrid();
+    panel.dispatchEvent(new Event("resize"));
   });
+
+  const ajustarTamannoGrid = () => {
+    gridCards.className = `grid gap-4 grid-cols-${Math.floor(
+      panel.offsetWidth / 260
+    )}`;
+  };
+
+  panel.addEventListener("resize", ajustarTamannoGrid);
 };
 
 window.addEventListener("DOMContentLoaded", (e) => {
