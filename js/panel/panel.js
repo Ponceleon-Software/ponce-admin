@@ -116,7 +116,10 @@ const initResize = () => {
   });
 
   window.addEventListener("resize", (e) => {
-    if (panel.offsetWidth < 280) {
+    if (
+      panel.offsetWidth < 280 &&
+      window.innerWidth == window.parent.innerWidth
+    ) {
       panel.style.width = botonAbrir.style.right = "280px";
     }
     ajustarTamannoGrid();
