@@ -5,32 +5,99 @@ add_action('admin_footer', 'logo_en_admin_menu');
 /**
  * Añade el logo en el menu de admin si el usuario lo configuró
  */
-function logo_en_admin_menu() {
+function logo_en_admin_menu()
+{
 
   global $wpdb;
   $table_name = $wpdb->prefix . 'ponce';
 
-  $options = $wpdb->get_var( $wpdb->prepare(
-    " SELECT options FROM $table_name WHERE name = %s ", 'ponceLogo'
+  $options = $wpdb->get_var($wpdb->prepare(
+    " SELECT options FROM $table_name WHERE name = %s ",
+    'ponceLogo'
+  )); 
+
+  $is_active = $wpdb->get_var($wpdb->prepare(
+    " SELECT is_active FROM $table_name WHERE name = %s ",
+    'ponceLogo'
   ));
+
+  $is_active = json_decode($is_active, true);
+
   $options = json_decode($options, true);
 
-  if($options['inAdmin'] && $options['src']){
+  if ($is_active == 1 && $options['src'] && $options['inAdmin']) {
     $src = $options['src'];
 
     //Añado una constante al js que guarde la ruta de la imagen
-    ?>
+?>
     <script type="text/javascript">
       var paLogoUser = `<?php echo $src; ?>`;
     </script>
     <?php
-    
+    ?>
+    <style type="text/css">
+      body.login div#login h1 a {
+        background-image: url(<?php echo $src ?>);
+      }
+
+      #nsl-custom-login-form-main {
+        display: none;
+      }
+    </style>
+  <?php
+
     //Añado el script que usa la ruta previamente añadida para mostrar la imagen
-    wp_enqueue_script('logo_in_admin', plugins_url( '/js/enqueues/logoInAdmin.js', __DIR__),
-    array(), "0", true);
+    wp_enqueue_script(
+      'logo_in_admin',
+      plugins_url('/js/enqueues/logoInAdmin.js', __DIR__),
+      array(),
+      "0",
+      true
+    );
   }
-    
 }
+
+/**
+ * Agrega el logo en el login si el usuario lo configuró
+ */
+//Hook para la implementación de la imagen en el login
+add_action('login_enqueue_scripts', 'my_login_logo_one');
+function my_login_logo_one()
+{
+  global $wpdb;
+  $table_name = $wpdb->prefix . 'ponce';
+
+  $options = $wpdb->get_var($wpdb->prepare(
+    " SELECT options FROM $table_name WHERE name = %s ",
+    'ponceLogo'
+  ));
+
+  $options = json_decode($options, true);
+
+  $is_active = $wpdb->get_var($wpdb->prepare(
+    " SELECT is_active FROM $table_name WHERE name = %s ",
+    'ponceLogo'
+  ));
+
+  $is_active = json_decode($is_active, true);
+
+  if ($is_active == 1 && $options['inLogin']) {
+    $src = $options['src'];
+
+  ?>
+    <style type="text/css">
+      #login>h1>a {
+        background-image: url(<?php echo $src; ?>);
+      }
+
+      #nsl-custom-login-form-main {
+        display: none;
+      }
+    </style>
+<?php
+  }
+}
+
 
 
 
