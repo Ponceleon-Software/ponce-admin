@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
   element = document.querySelector("#wpbody-content");
   element.appendChild(frame);
   let iframe = document.getElementById("iframe");
-  iframe.addEventListener("load", function (e) {
+  /*iframe.addEventListener("load", function (e) {
     const documentIframe = iframe.contentWindow.document;
     const changeIframe = function () {
       if (iframe.style.width != "100vw") {
@@ -32,7 +32,7 @@ window.addEventListener("load", function () {
       documentIframe.getElementById("pa-cubierta"),
     ];
     p_button.forEach((value) => value.addEventListener("click", changeIframe));
-  });
+  });*/
 });
 
 /*/Ruta dinámica implementada (kindof, falta testear fuera de wp-admin)

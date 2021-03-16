@@ -3,7 +3,11 @@
  * reactiva
  */
 const controlPanel = () => {
-  const statePanel = { lateralOpen: false };
+  const statePanel = {
+    lateralOpen: false,
+    posicionBoton: { x: null, y: null },
+    botonDragging: false,
+  };
   const idElements = {
     lateral: "pa-lateral-deslizable",
     botonAbrir: "pa-button-fixed",
@@ -15,6 +19,7 @@ const controlPanel = () => {
   //indica si la barra lateral está mostrada y se le añaden los
   //elementos que modificara en cada render
   const modPanel = utils.createModificador(statePanel, idElements);
+  const iframe = window.parent.document.getElementById("iframe");
 
   //Guardo las clases iniciales de los elementos
   const classesL = modPanel.lateral.className;
@@ -24,19 +29,61 @@ const controlPanel = () => {
 
   let prevStyle = null;
 
+  const iFrame = {
+    set maximized(is) {
+      if (is) {
+        iframe.style.width = "100vw";
+        iframe.style.top = "0";
+        iframe.style.marginTop = "0";
+        iframe.style.height = "100%";
+      } else {
+        iframe.style = null;
+      }
+    },
+  };
+  let movementStart = { x: 0, y: 0 };
+  let botonMoved = false;
+  const dragButton = {
+    move: (e) => {
+      e.preventDefault();
+      botonMoved = true;
+      modPanel.setState({
+        posicionBoton: { x: e.x - movementStart.x, y: e.y - movementStart.y },
+      });
+    },
+    mouseDown: (e) => {
+      e.preventDefault();
+      movementStart = {
+        x: e.offsetX - e.target.offsetWidth,
+        y: e.offsetY - 20,
+      };
+      modPanel.setState({ botonDragging: true });
+    },
+    mouseUp: (e) => {
+      e.preventDefault();
+      if (!botonMoved)
+        modPanel.setState({ lateralOpen: !modPanel.state.lateralOpen });
+      modPanel.setState({ botonDragging: false });
+      botonMoved = false;
+    },
+  };
+
   //Creo y ejecuto por primera vez la función render que se encarga
   //de modificar las clases css del elemento según el state
   modPanel.render = () => {
-    modPanel.lateral.className =
-      classesL + (modPanel.state.lateralOpen ? " right-0" : " -right-3/4");
+    const state = JSON.parse(JSON.stringify(modPanel.state));
+    iFrame.maximized = true;
 
-    if (!modPanel.state.lateralOpen) {
+    modPanel.lateral.className =
+      classesL + (state.lateralOpen ? " right-0" : " -right-3/4");
+
+    if (!state.lateralOpen) {
       prevStyle = {
         transition: modPanel.lateral.style.transition,
         width: modPanel.lateral.style.width,
       };
       modPanel.lateral.style = null;
-      modPanel.contenedorBoton.style = null;
+      //modPanel.contenedorBoton.style = null;
     } else {
       modPanel.lateral.style.width = modPanel.contenedorBoton.style.right =
         prevStyle.width;
@@ -46,14 +93,39 @@ const controlPanel = () => {
       }, 500);
     }
 
+    //#region Mover boton
+    modPanel.contenedorBoton.style.transition = state.botonDragging
+      ? "none"
+      : null;
+    modPanel.botonAbrir.onmousedown = state.lateralOpen
+      ? null
+      : dragButton.mouseDown;
+    window.onmousemove = state.botonDragging ? dragButton.move : null;
+    window.onmouseup = state.botonDragging ? dragButton.mouseUp : null;
+
+    if (state.botonDragging) {
+      const { x, y } = state.posicionBoton;
+      modPanel.contenedorBoton.style.top = `${y}px`;
+      modPanel.contenedorBoton.style.bottom = null;
+      modPanel.contenedorBoton.style.right = `${window.innerWidth - x}px`;
+    } else if (
+      !state.lateralOpen &&
+      (state.posicionBoton.x || state.posicionBoton.y)
+    ) {
+      const { x, y } = state.posicionBoton;
+      modPanel.contenedorBoton.style.top = `${y}px`;
+      modPanel.contenedorBoton.style.right = null;
+    }
+    //#endregion
+
     modPanel.contenedorBoton.className =
       classesBoton +
-      (modPanel.state.lateralOpen
+      (state.lateralOpen
         ? " right-3/4 top-12 -mt-6 h-8 w-8"
         : " right-0 top-1/2 -mt-6 h-12 w-12");
     modPanel.cubierta.className =
-      classesCubierta + (modPanel.state.lateralOpen ? "" : " hidden");
-    modPanel.botonAbrir.innerHTML = modPanel.state.lateralOpen ? "X" : imgBoton;
+      classesCubierta + (state.lateralOpen ? "" : " hidden");
+    modPanel.botonAbrir.innerHTML = state.lateralOpen ? "X" : imgBoton;
   };
   modPanel.render();
 
@@ -134,19 +206,3 @@ window.addEventListener("DOMContentLoaded", (e) => {
 
   viewsControl();
 });
-
-/*const labeledInputFile = (input, attributes) => {
-  input.className += " hidden";
-  return utils.createElement("div", { className: "flex justify-center" }, [
-    utils.createElement(
-      "label",
-      {
-        ...attributes,
-        htmlFor: input.id,
-        className: "btn btn-circle btn-primary",
-        innerHTML: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="30px" height="30px"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
-      },
-      [input]
-    ),
-  ]);
-};*/
