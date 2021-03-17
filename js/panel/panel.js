@@ -29,6 +29,7 @@ const controlPanel = () => {
 
   let prevStyle = null;
 
+  //#region Funciones para mover botón
   const iFrame = {
     set maximized(is) {
       if (is) {
@@ -67,6 +68,7 @@ const controlPanel = () => {
       botonMoved = false;
     },
   };
+  //#endregion
 
   //Creo y ejecuto por primera vez la función render que se encarga
   //de modificar las clases css del elemento según el state
