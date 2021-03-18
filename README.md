@@ -1,4 +1,4 @@
-# Ponce Admin [![Release](https://img.shields.io/github/v/release/Ponceleon-Software/ponce-admin?color=green&logo=wordpress)](https://github.com/Ponceleon-Software/ponce-admin/releases/tag/V1.0.0) [![Multisite Support?](https://img.shields.io/badge/MU-NO-red.svg)](https://shields.io/) [![Issues](https://img.shields.io/github/issues/ponceleon-software/ponce-admin?logo=Github)](https://shields.io)
+# Ponce Admin [![Release](https://img.shields.io/github/v/release/Ponceleon-Software/ponce-admin?color=green&logo=wordpress)](https://github.com/Ponceleon-Software/ponce-admin/releases/tag/V2.0.0) [![Multisite Support?](https://img.shields.io/badge/MU-YES-green.svg)](https://shields.io/) [![Issues](https://img.shields.io/github/issues/ponceleon-software/ponce-admin?logo=Github)](https://shields.io)
 
 Sua nec thalamoque Midan. Esse qua est mihi portarum venerit undis ex moderata
 **corpora**, Exadius dicta mollia ne in alios. E versata quaque sus risitque
@@ -50,5 +50,7 @@ ponce-admin
 * [José Ponceleón](https://github.com/ponceleon "@ponceleon") **(Director)**
 * [Cesar Pérez](https://github.com/cesaraugp "@cesaraugp") **(Developer)**
 * [Angel Suárez](https://github.com/angeljsb "@angeljsb") **(Developer)**
+* [Gilbert Angulo](https://github.com/japple64 "@japple64") **(Developer)**
+
 
 [Ponceleón Software](https://github.com/Ponceleon-Software "Ponceleón Software")

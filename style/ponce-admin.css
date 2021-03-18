@@ -1,0 +1,32 @@
+.ponce-admin__ping-decoration {
+  animation: custom-ping 9s linear infinite;
+}
+
+.ponce-admin__ping-decoration--2 {
+  animation-delay: 3s;
+}
+
+.ponce-admin__ping-decoration--3 {
+  animation-delay: 6s;
+}
+
+.pa-max-lines-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.pa-aparecer {
+  animation: button-pop 400ms ease-out;
+}
+
+.pa-resize-border {
+  cursor: ew-resize;
+}
+
+@keyframes custom-ping {
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
