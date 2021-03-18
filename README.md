@@ -13,7 +13,8 @@ permaturuit.
 | Release |  V1.0.0|
 | ------------- | ------------- |
 | Ponce Topbar  | :heavy_check_mark: |
-| Ponce Logo  | Próximamente...  |
+| Ponce Logo  | :heavy_check_mark:  |
+| Ponce ...  | Próximamente...  |
 
 
 ## Folder Structure
