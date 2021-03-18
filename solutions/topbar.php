@@ -1,9 +1,9 @@
 <?php
 
 global $wpdb;
-$value = $wpdb->get_var( $wpdb->prepare(
-    " SELECT is_active FROM {$wpdb->prefix}ponce WHERE name = 'ponceTopBar' "
-) );
+$tablename=$wpdb->prefix . 'ponce';
+$name='ponceTopBar';
+$value = $wpdb->get_var( $wpdb->prepare(" SELECT is_active FROM $tablename WHERE name = %s ",$name) );
 
 
 
