@@ -13,38 +13,46 @@ permaturuit.
 | Release |  V1.0.0|
 | ------------- | ------------- |
 | Ponce Topbar  | :heavy_check_mark: |
-| Ponce Logo  | Próximamente...  |
+| Ponce Logo  | :heavy_check_mark:  |
+| Ponce ...  | Próximamente...  |
 
 
 ## Folder Structure
 
 ```
-ponce-admin
-├─ assets
-│  └─ img
-│     └─ logo-ponceleon.svg
-├─ endpoints
-│  └─ topbar.php
-├─ html
-│  └─ ponce-admin.html
-├─ initialize.php
-├─ js
-│  ├─ definitions.js
-│  ├─ main.js
-│  ├─ panel
-│  │  ├─ cardsControl.js
-│  │  ├─ panel.js
-│  │  └─ solutionCards.js
-│  └─ solutions
-│     └─ baseCalls.js
-├─ ponce-admin.php
-├─ settings.php
-├─ solutions
-│  └─ topbar.php
-└─ style
-   ├─ frame.css
-   └─ ponce-admin.css
-
+📦ponce-admin
+ ┣ 📂assets
+ ┃ ┗ 📂img
+ ┃ ┃ ┗ 📜logo-ponceleon.svg
+ ┣ 📂endpoints
+ ┃ ┣ 📜poncelogo.php
+ ┃ ┗ 📜topbar.php
+ ┣ 📂html
+ ┃ ┗ 📜ponce-admin.html
+ ┣ 📂js
+ ┃ ┣ 📂enqueues
+ ┃ ┃ ┗ 📜logoInAdmin.js
+ ┃ ┣ 📂panel
+ ┃ ┃ ┣ 📜cardsControl.js
+ ┃ ┃ ┣ 📜panel.js
+ ┃ ┃ ┣ 📜solutionCards.js
+ ┃ ┃ ┗ 📜views.js
+ ┃ ┣ 📂solutions
+ ┃ ┃ ┣ 📜baseCalls.js
+ ┃ ┃ ┗ 📜poncelogo.js
+ ┃ ┣ 📜definitions.js
+ ┃ ┗ 📜main.js
+ ┣ 📂solutions
+ ┃ ┣ 📜poncelogo.php
+ ┃ ┗ 📜topbar.php
+ ┣ 📂style
+ ┃ ┣ 📜frame.css
+ ┃ ┗ 📜ponce-admin.css
+ ┣ 📜.gitignore
+ ┣ 📜initialize.php
+ ┣ 📜ponce-admin.php
+ ┣ 📜ponce_init_config.php
+ ┗ 📜README.md
 ```
 ### Contributors
 * [José Ponceleón](https://github.com/ponceleon "@ponceleon") **(Director)**
