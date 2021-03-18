@@ -1,5 +1,5 @@
 <?php
-include 'settings.php';
+include 'ponce_init_config.php';
 global $todb;
 $todb =$properties;
 global $ponce_db_version;
