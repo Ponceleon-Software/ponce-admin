@@ -14,7 +14,20 @@ if ( !function_exists('wp_get_current_user') ) {
     include(ABSPATH . "wp-includes/pluggable.php"); 
 }
 
+global $wpdb;
 
+define('PONCE_ADMIN__FILE__', __FILE__);
+define( 'PONCE_ADMIN_PATH', plugin_dir_path( PONCE_ADMIN__FILE__ ) );
+define('PONCE_ADMIN_SOLUTIONS_TABLE', $wpdb->prefix . 'ponce');
+
+require_once PONCE_ADMIN_PATH . 'solutions/solution.php';
+require_once PONCE_ADMIN_PATH . 'solutions/poncelogo.php';
+require_once PONCE_ADMIN_PATH . 'solutions/topbar.php';
+require_once PONCE_ADMIN_PATH . 'php/solutions-manager.php';
+require_once PONCE_ADMIN_PATH . 'php/plugin.php';
+
+
+/*
 include 'initialize.php';
 include 'endpoints/topbar.php';
 include 'endpoints/poncelogo.php';
@@ -52,4 +65,4 @@ function dcms_insert_script_upload(){
 }
 register_activation_hook( __FILE__, 'ponce_install' );
 register_activation_hook( __FILE__, 'ponce_install_data' );
-?>
+?>*/

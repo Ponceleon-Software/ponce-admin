@@ -25,19 +25,22 @@ async function wpRestApi(path) {
 /**
  * Hace una llamada a la api rest a partir de un formulario
  * @param {string} path ruta del endpoint
- * @param {HTMLFormElement} form Formulario a enviar
+ * @param {any} params Json con los parametros a enviar
  * @returns {Promise<Response>} Respuesta del endpoint
  */
-async function wpRestApiPost(path, form) {
+async function wpRestApiPost(path, params = {}) {
   let response;
-  let formData = new FormData(form);
+
   try {
     response = await fetch(`${endpointurl}/wp-json/ponceadmin/v2/${path}`, {
       method: "POST",
       "Access-Control-Allow-Origin": "*",
       mode: "cors",
       credentials: "include",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
     });
     return response;
   } catch (e) {
