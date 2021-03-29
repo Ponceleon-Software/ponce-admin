@@ -4,7 +4,10 @@ const ponceLogoForm = (options = {}) => {
   });
 
   const poncelogo = new Componente(form);
-  poncelogo.state = options;
+  poncelogo.state = {
+    ...options,
+    saving: false,
+  };
 
   //#region inputLogo
   poncelogo.logoInput = utils.createElement("input", {
@@ -111,13 +114,18 @@ const ponceLogoForm = (options = {}) => {
   let guardando = false;
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (guardando) return;
-    guardando = true;
-    poncelogo.submit.appendChild(loadCircle);
-    const response = await wpRestApiPost("logo", form);
+
+    const state = JSON.parse(JSON.stringify( poncelogo.state ));
+    const {src, inAdmin, inLogin} = state;
+
+    if (poncelogo.state.saving) return;
+    poncelogo.setState({saving: true});
+
+    const params = {src, inAdmin, inLogin};
+    const response = await wpRestApiPost("options/ponceLogo", params);
     showAlerts(response.ok);
-    poncelogo.submit.removeChild(loadCircle);
-    guardando = false;
+
+    poncelogo.setState({saving: false});
   });
   //#endregion
 
@@ -146,10 +154,19 @@ const ponceLogoForm = (options = {}) => {
 
   poncelogo.template = () => {
     const temp = [labelLI];
-    poncelogo.srcInput.value = poncelogo.state.src;
-    previewImg.firstChild.src = poncelogo.state.src;
-    poncelogo.inAdminToggle.checked = poncelogo.state.inAdmin;
-    poncelogo.inLoginToggle.checked = poncelogo.state.inLogin;
+
+    const state = JSON.parse(JSON.stringify(poncelogo.state));
+    const {src, inAdmin, inLogin, saving} = state;
+
+    poncelogo.srcInput.value = src;
+    previewImg.firstChild.src = src;
+
+    poncelogo.inAdminToggle.checked = inAdmin;
+    poncelogo.inLoginToggle.checked = inLogin;
+
+    poncelogo.submit.innerHTML = "Guardar" 
+      + (saving ? loadCircle.outerHTML : '');
+
     if (poncelogo.state.src) {
       temp.push(previewImg, contenedorSwitchs, poncelogo.srcInput);
     }
