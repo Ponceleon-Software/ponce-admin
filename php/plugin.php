@@ -2,6 +2,8 @@
 
 namespace Ponce_Admin;
 
+use Ponce_Admin\Solutions\Solutions_Manager;
+
 /**
  * Clase principal del plugin que inicializa toda la funcionalidad
  * del mismo
@@ -105,6 +107,10 @@ class Plugin {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
+	}
+
+	public function add_ponce_admin_frame(){
+		echo 'Hello world';
 	}
 
 	public function enqueue_scripts_iframe(){

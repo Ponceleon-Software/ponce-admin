@@ -2,6 +2,8 @@
 
 namespace Ponce_Admin\Solutions;
 
+if (defined('SOLUTION_DEFINED')) die ('Solution');
+
 abstract class Solution {
 
 	/**
@@ -41,7 +43,15 @@ abstract class Solution {
 
 		if( $this->is_active  ){
 			$this->do_solution();
+
+			/**
+			 * Acción que se ejecuta si la solución está activa, luego de que
+			 * esta ha hecho los cambios correspondientes
+			 */
+			do_action("solution_{$name}_is_active");
 		}
+
+		add_filter('ponce_admin_solutions', [$this, 'add_to_ponce_admin']);
 
 	}
 
@@ -67,7 +77,7 @@ abstract class Solution {
 			$row = $this->default_config();
 
 			$inserted = $wpdb->insert(
-				self::TABLE_NAME, $default, array('%s','%s','%d','%s','%s')
+				$table_name, $row, array('%s','%s','%d','%s','%s')
 			);
 
 			if ($inserted == 0) return false;
@@ -85,6 +95,15 @@ abstract class Solution {
 	}
 
 	/**
+	 * Acción para el filtro que se encarga de añadir esta solución a
+	 * ponce admin
+	 */
+	public function add_to_ponce_admin($solutions){
+		$solutions[$this->name] = $this;
+		return $solutions;
+	}
+
+	/**
 	 * Cambia el valor de is_active en la base de datos al contrario del
 	 * que es actualmente
 	 *
@@ -92,12 +111,27 @@ abstract class Solution {
 	 * base de datos o false si hubo un error
 	 */
 	public function toogle_is_active(){
+		return $this->set_is_active( !$this->is_active );
+	}
+
+	/**
+	 * Cambia el valor de is_active en la base de datos por uno
+	 * especificado.
+	 *
+	 * @param boolean $is_active El nuevo valor para is_active
+	 *
+	 * @return int|false La cantidad de registros afectados en la 
+	 * base de datos o false si hubo un error
+	 */
+	public function set_is_active($is_active){
+		if($is_active === $this->is_active) return 0;
+
 		global $wpdb;
 
-		$result = $wpdb->update(self::TABLE_NAME, array('is_active' => !$this->is_active), array( 'name' => $this->name ));
+		$result = $wpdb->update(self::TABLE_NAME, array('is_active' => $is_active), array( 'name' => $this->name ));
 
 		if( is_int($result) && $result>0){
-			$this->is_active = !$this->is_active;
+			$this->is_active = $is_active;
 		}
 
   	return $result;
@@ -142,13 +176,19 @@ abstract class Solution {
 
 		$updated_string = json_encode($update_value);
 
-		return $wpdb->update(
+		$registers = $wpdb->update(
 			self::TABLE_NAME, 
 			array( 'options' => $updated_string ),
 			array( 'name' => $this->name ),
 			array( '%s' ),
 			array( '%s' )
 		);
+
+		if( $registers > 0 ){
+			$this->options = $update_value;
+		}
+
+		return $registers;
 
 	}
 
@@ -167,3 +207,5 @@ abstract class Solution {
 	public abstract function do_solution(); 
 
 }
+
+define('SOLUTION_DEFINED', true);
