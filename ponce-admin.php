@@ -18,11 +18,15 @@ global $wpdb;
 
 define('PONCE_ADMIN__FILE__', __FILE__);
 define( 'PONCE_ADMIN_PATH', plugin_dir_path( PONCE_ADMIN__FILE__ ) );
-define('PONCE_ADMIN_SOLUTIONS_TABLE', $wpdb->prefix . 'ponce');
 
-require_once PONCE_ADMIN_PATH . 'solutions/solution.php';
-require_once PONCE_ADMIN_PATH . 'solutions/poncelogo.php';
-require_once PONCE_ADMIN_PATH . 'solutions/topbar.php';
+if( !defined('PONCE_ADMIN_SOLUTIONS_TABLE') ){
+  define('PONCE_ADMIN_SOLUTIONS_TABLE', $wpdb->prefix . 'ponce');
+}
+
+if( !defined('SOLUTION_DEFINED') ){
+  require_once PONCE_ADMIN_PATH . 'solutions/solution.php';
+}
+
 require_once PONCE_ADMIN_PATH . 'php/solutions-manager.php';
 require_once PONCE_ADMIN_PATH . 'php/plugin.php';
 

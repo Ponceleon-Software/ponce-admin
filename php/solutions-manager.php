@@ -1,9 +1,26 @@
 <?php
 
-namespace Ponce_Admin;
+namespace Ponce_Admin\Solutions;
 
-use Ponce_Admin\Solutions\Ponce_Logo;
-use Ponce_Admin\Solutions\Ponce_Top_Bar;
+function ponce_defined_constant( $folder_name ){
+	$name_floor = str_replace("-", "_", $folder_name);
+	$name_upper = strtoupper($name_floor);
+	return $name_upper . '_DEFINED';
+}
+
+$dir_solutions = PONCE_ADMIN_PATH . "solutions";
+$files_in_dir = scandir($dir_solutions);
+
+foreach ($files_in_dir as $name) {
+	$solution_dir_name = $dir_solutions . DIRECTORY_SEPARATOR . $name;
+	if ( !in_array($name,array(".","..")) && is_dir($solution_dir_name)){
+		$php_file_name = $solution_dir_name . DIRECTORY_SEPARATOR . $name . '.php';
+		$constant_name = ponce_defined_constant($name);
+    if(file_exists($php_file_name) && !defined($constant_name)){
+    	require_once( $php_file_name );
+    }
+  }
+}
 
 class Solutions_Manager{
 
@@ -15,10 +32,13 @@ class Solutions_Manager{
 	public $array_solutions;
 
 	public function __construct() {
-		$this->array_solutions = array(
-			Ponce_Logo::NAME => new Ponce_Logo(),
-			Ponce_Top_Bar::NAME => new Ponce_Top_Bar()
-		);
+
+		/**
+		 * Filtro para llenar el array de soluciones
+		 */
+		$array_solutions_by_filter = apply_filters('ponce_admin_solutions', array());
+
+		$this->array_solutions = array_filter($array_solutions_by_filter, function($a){ return $a instanceof Solution; });
 
 		add_action( 'rest_api_init', [$this, 'init_solutions_rest_api'] );
 	}

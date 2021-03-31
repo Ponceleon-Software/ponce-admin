@@ -2,9 +2,37 @@
 
 namespace Ponce_Admin\Solutions;
 
+if (defined('PONCE_TOP_BAR_DEFINED')) die ('Top bar');
+
 class Ponce_Top_Bar extends Solution {
 
 	const NAME = 'ponceTopBar';
+
+	/**
+   * Guarda la instancia única del plugin
+   * 
+   * @static
+   * @access private
+   * 
+   * @var Plugin
+   */
+  private static $instance = null;
+
+  /**
+   * Devuelve una instancia del plugin y se asegura de que solo pueda
+   * existir una instancia
+   * 
+   * @static
+   * 
+   * @return Plugin Instancia de la clase
+   */
+  public static function instance() {
+    if ( is_null( self::$instance ) ) {
+      self::$instance = new self();
+    }
+
+    return self::$instance;
+  }
 
 	public function __construct(){
     parent::__construct( self::NAME );
@@ -67,57 +95,7 @@ class Ponce_Top_Bar extends Solution {
 	}
 
 }
-/*
 
-global $wpdb;
-$tablename=$wpdb->prefix . 'ponce';
-$name='ponceTopBar';
-$value = $wpdb->get_var( $wpdb->prepare(" SELECT is_active FROM $tablename WHERE name = %s ",$name) );
+Ponce_Top_Bar::instance();
 
-
-
-function ocultar_nodos_admin_bar() 
-	{
-		global $wp_admin_bar;   
-		if ( !is_object( $wp_admin_bar ) )
-			return;
-
-		$nodes = $wp_admin_bar->get_nodes();
-		foreach( $nodes as $node )
-		{
-			if( !$node->parent || 'top-secondary' == $node->parent )
-			{
-				$wp_admin_bar->remove_menu( $node->id );
-			}           
-		}
-		
-	}
-
-function ocultar_espacio_en_admin_bar() { 
-	?>
-	<script>
-	document.querySelector("html").className = "none";
-	</script>
-	<?php 
-}
-function hide_admin_bar() { 
-	?>
-	<style type="text/css">
-
-		#wpadminbar {
-		  display: none;
-		}
-	  </style>
-	<?php 
-}
-
-
-if ($value){
-	add_filter( 'show_admin_bar', '__return_false' );
-	add_action( 'admin_bar_menu', 'ocultar_nodos_admin_bar', 200 );
-	add_action( 'wp_head', 'hide_admin_bar' );
-	add_action( 'admin_head', 'hide_admin_bar' );
-	add_action( 'admin_head', 'ocultar_espacio_en_admin_bar' );
-
-}
-?>*/
+define('PONCE_TOP_BAR_DEFINED', true);
