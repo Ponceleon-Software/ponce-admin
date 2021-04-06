@@ -2,7 +2,7 @@
 
 namespace Ponce_Admin\Solutions;
 
-if (defined('PONCE_LOGO_DEFINED')) die ('Ponce logo');
+if (defined('PONCE_LOGO_DEFINED')) die ('Ponce_Logo');
 
 class Ponce_Logo extends Solution {
 
@@ -74,9 +74,6 @@ class Ponce_Logo extends Solution {
 
     //Añado una constante al js que guarde la ruta de la imagen
     ?>
-      <script type="text/javascript">
-        var paLogoUser = `<?php echo $src; ?>`;
-      </script>
       <style type="text/css">
         body.login div#login h1 a {
           background-image: url(<?php echo $src ?>);
@@ -84,6 +81,12 @@ class Ponce_Logo extends Solution {
 
         #nsl-custom-login-form-main {
           display: none;
+        }
+
+        .ponce-admin-logo {
+          max-width: 110px;
+          max-height: 110px;
+          width: 100%;
         }
       </style>
     <?php
@@ -95,6 +98,8 @@ class Ponce_Logo extends Solution {
       "0",
       true
     );
+
+    wp_localize_script('logo_in_admin', 'paLogoUser', $src);
 
   }
 
