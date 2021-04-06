@@ -13,6 +13,6 @@
 
   document.querySelector(
     "#logo > p"
-  ).innerHTML = `<img src='${paLogoUser}'  width='106' height='106' />`;
+  ).innerHTML = `<img src='${paLogoUser}' class='ponce-admin-logo' />`;
   document.querySelector("#logo > p").style.textAlign = "center";
 })();
